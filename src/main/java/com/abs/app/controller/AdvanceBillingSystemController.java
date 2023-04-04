@@ -152,7 +152,7 @@ public class AdvanceBillingSystemController {
 		Email emailmodel = new Email();
 		emailmodel.setMsgBody("Your Username is "+ userModel.getAdminname());
 		emailmodel.setRecipient(userModel.getEmail());
-		emailmodel.setSubject("Username Recovery from House Rental Service");
+		emailmodel.setSubject("Username Recovery from Advanced Billing System");
 		System.out.println("------------------body"+ emailmodel.getMsgBody()+"======="+ emailmodel.getRecipient());
 		output = messageService.sendSimpleMail(emailmodel);
 		
