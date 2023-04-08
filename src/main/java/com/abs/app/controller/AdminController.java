@@ -37,7 +37,7 @@ public class AdminController {
 	@Autowired
 	private CustomerService customerService;
 
-	
+//check the code here	
 	@GetMapping("/admin")
 	public String getAdminWelcomePage(@ModelAttribute("admin") Admin admin, Model model, HttpSession session)
 	{
