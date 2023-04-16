@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.abs.app.model.Admin;
 import com.abs.app.model.Customer;
 import com.abs.app.model.Employee;
+import com.abs.app.model.Shift;
 import com.abs.app.service.AdminService;
 import com.abs.app.service.CustomerService;
 import com.abs.app.service.EmployeeService;
@@ -190,6 +191,38 @@ public class AdminController {
 		return "admin/customers";
 	}
 	
+	@GetMapping("/shifts")
+	public String shifts(Model model) {
+
+		List<Shift> shifts = adminService.getAllShifts();
+		model.addAttribute("shifts", shifts);
+		System.out.println(shifts.get(0));
+		Shift shift = new Shift();
+		model.addAttribute("shift", shift);
+	List<Employee> employees = employeeService.getAllEmployees();
+		
+		model.addAttribute("employees", employees);
+		return "admin/shifts";
+	}
+	
+	@GetMapping("/createShift")
+	public String createShift(Model model, HttpSession session) {
+		
+		Shift shift = new Shift();
+		model.addAttribute("shift", shift);
+	
+		return "admin/createshift";
+	}
+	
+	@PostMapping("/saveShift")
+	public String saveShift(@ModelAttribute("shift") Shift shift, Model model, HttpSession session)
+	{
+		System.out.println("Shift Created");
+
+		adminService.saveShift(shift);
+		
+		return "redirect:/admin";
+	}
 	
 	
 }
