@@ -12,7 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.abs.app.dao.AdminRepo;
+import com.abs.app.dao.ShiftRepo;
 import com.abs.app.model.Admin;
+import com.abs.app.model.Employee;
+import com.abs.app.model.Shift;
 
 
 @Service
@@ -20,6 +23,9 @@ public class AdminServiceImpl implements AdminService{
 	
 	@Autowired
 	private AdminRepo adminRepo;
+	
+	@Autowired
+	private ShiftRepo shiftRepo;
 	
 	
 	
@@ -111,6 +117,39 @@ public class AdminServiceImpl implements AdminService{
 			
 			adminRepo.deleteById(id);
 			
+	}
+
+	@Override
+	public List<Shift> getAllShifts() {
+		// TODO Auto-generated method stub
+		
+		return shiftRepo.findAll();
+	}
+
+	@Override
+	public void saveShift(Shift shift) {
+		// TODO Auto-generated method stub
+		shiftRepo.save(shift);
+		
+	}
+
+	@Override
+	public Shift getShiftById(Long id) {
+		// TODO Auto-generated method stub
+		return shiftRepo.findShiftById(id);
+	}
+
+	@Override
+	public void updateShift(Shift shift) {
+		shiftRepo.save(shift);
+		
+	}
+
+	@Override
+	public void deleteShift(Long id) {
+		// TODO Auto-generated method stub
+		shiftRepo.delete(shiftRepo.findShiftById(id));
+		
 	}
 
 
