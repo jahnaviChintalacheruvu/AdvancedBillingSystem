@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.abs.app.model.Admin;
 import com.abs.app.model.Customer;
 import com.abs.app.model.Employee;
+import com.abs.app.model.Inventory;
+import com.abs.app.model.Shift;
 import com.abs.app.service.AdminService;
 import com.abs.app.service.CustomerService;
 import com.abs.app.service.EmployeeService;
@@ -61,15 +63,6 @@ public class AdminController {
 		Employee employee = new Employee();
 		model.addAttribute("employee", employee);
 		return "admin/employees";
-	}
-	
-	@GetMapping("/createEmployee")
-	public String createEmployee(Model model, HttpSession session) {
-		
-		Employee employee = new Employee();
-		model.addAttribute("employee", employee);
-		
-		return "customer/createemployee";
 	}
 	
 	@PostMapping("/saveEmployee")
@@ -151,15 +144,6 @@ public class AdminController {
 		return "admin/customers";
 	}
 	
-	@GetMapping("/createCustomer")
-	public String createCustomer(Model model, HttpSession session) {
-		
-		Customer customer = new Customer();
-		model.addAttribute("customer", customer);
-		
-		return "admin/createcustomer";
-	}
-	
 	@PostMapping("/saveCustomer")
 	public String saveCustomer(@ModelAttribute("customer") Customer customer, Model model, HttpSession session)
 	{
@@ -190,6 +174,115 @@ public class AdminController {
 		return "admin/customers";
 	}
 	
+	@GetMapping("/shifts")
+	public String shifts(Model model) {
+
+		List<Shift> shifts = adminService.getAllShifts();
+		model.addAttribute("shifts", shifts);
+		Shift shift = new Shift();
+		model.addAttribute("shift", shift);
+	List<Employee> employees = employeeService.getAllEmployees();
+		
+		model.addAttribute("employees", employees);
+		return "admin/shifts";
+	}
+
+	
+	@PostMapping("/saveShift")
+	public String saveShift(@ModelAttribute("shift") Shift shift, Model model, HttpSession session)
+	{
+		System.out.println("Shift Created");
+
+		adminService.saveShift(shift);
+		
+		return "redirect:/admin";
+	}
+	
+	@GetMapping("/editShift/{id}")
+	public String editShift(Model model, HttpSession session, @PathVariable(name="id") Long id) {
+		
+		
+		@SuppressWarnings("unchecked")
+        List<String> messages = (List<String>) session.getAttribute("MY_SESSION_MESSAGES");
+		if(messages == null) {
+			model.addAttribute("errormsg", "Session Expired. Please Login Again");
+			return "home/error";
+		}
+		Shift shift = adminService.getShiftById(id);
+		model.addAttribute("shift", shift);	
+List<Employee> employees = employeeService.getAllEmployees();
+		
+		model.addAttribute("employees", employees);
+		System.out.println(shift);
+		
+		return "admin/updateshift";
+	}
+	
+	@PostMapping("/updateShift")
+	public String updateShift(@ModelAttribute("shift") Shift shift, Model model, HttpSession session)
+	{
+		System.out.println("employee updated");
+		
+		adminService.updateShift(shift);
+		return "redirect:/admin";
+	}
+	
+	@PostMapping("/deleteShift/{id}")
+	public String deleteShift(@PathVariable(name="id") Long id)
+	{
+		adminService.deleteShift(id);
+		return "redirect:/admin";
+	}
+	
+	@GetMapping("/inventory")
+	public String inventory(Model model) {
+
+		List<Inventory> inventories = adminService.getAllInventories();
+	
+		model.addAttribute("inventories", inventories);
+		Inventory inventory = new Inventory();
+		model.addAttribute("inventory", inventory);
+	
+		
+		return "admin/inventories";
+	}
+	
+	@PostMapping("/saveInventory")
+	public String saveInventory(@ModelAttribute("inventory") Inventory inventory, Model model, HttpSession session)
+	{
+		System.out.println("Inventory Created");
+
+		adminService.saveInventory(inventory);
+		
+		return "redirect:/admin";
+	}
+	
+	@GetMapping("/editInventory/{id}")
+	public String editInventory(Model model, HttpSession session, @PathVariable(name="id") Long id) {
+		
+		
+		@SuppressWarnings("unchecked")
+        List<String> messages = (List<String>) session.getAttribute("MY_SESSION_MESSAGES");
+		if(messages == null) {
+			model.addAttribute("errormsg", "Session Expired. Please Login Again");
+			return "home/error";
+		}
+		Inventory inventory = adminService.getInventoryById(id);
+		model.addAttribute("inventory", inventory);	
+
+		System.out.println(inventory);
+		
+		return "admin/updateinventory";
+	}
+	
+	@PostMapping("/updateInventory")
+	public String updateShift(@ModelAttribute("inventory") Inventory inventory, Model model, HttpSession session)
+	{
+		System.out.println("employee updated");
+		
+		adminService.updateInventory(inventory);
+		return "redirect:/admin";
+	}
 	
 	
 }
