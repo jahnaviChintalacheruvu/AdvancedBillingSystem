@@ -251,17 +251,17 @@
     <div class="table-title">
       <div class="row">
         <div class="col-sm-3">
-          <h2>Manage <b>Employees</b></h2>
+          <h2>Manage <b>Customers</b></h2>
         </div>
         <div class="col-sm-3">
-		   <form class="d-flex" role="search" action="#" th:action=@{/searchEmployee} method="post">
+		   <form class="d-flex" role="search" action="#" th:action=@{/searchCustomer} method="post">
 		  <input style="width:200px;" type="text" class="form-control" name="search" placeholder="Search ......" >
 		  <button type="submit" class="btn btn-success"><span>Search</span></button>
 		  </form>
 		  </div>
 		  
         <div class="col-sm-6">
-          <a href="#addEmployeeModal" class="btn btn-success" data-toggle="modal"><span>Add New Employee</span></a>
+          <a href="#addEmployeeModal" class="btn btn-success" data-toggle="modal"><span>Add New Customer</span></a>
         </div>
       </div>
     </div>
@@ -278,29 +278,29 @@
           <th>City</th>
           <th>ZipCode</th>
           <th>Actions</th>
-          <th></th>
+         
         </tr>
       </thead>
       <tbody>
-      <th:block th:each="emp : ${employees}">
+      <th:block th:each="cus : ${customers}">
         <tr> 
-          <td th:text="${emp.name}"></td>
-          <td th:text="${emp.email}"></td>
-          <td th:text="${emp.age}"></td>
-          <td th:text="${emp.gender}"></td>
-          <td th:text="${emp.mobileNumber}"></td>
-          <td th:text="${emp.doorNo}"></td>
-          <td th:text="${emp.street}"></td>
-          <td th:text="${emp.city}"></td>
-          <td th:text="${emp.zipCode}"></td>
-          <td>
-          <a th:href="@{'/editEmployee/' + ${emp.Id}}" class="btn btn-success"><span>Edit</span></a>
+          <td th:text="${cus.name}"></td>
+          <td th:text="${cus.email}"></td>
+          <td th:text="${cus.age}"></td>
+          <td th:text="${cus.gender}"></td>
+          <td th:text="${cus.mobileNumber}"></td>
+          <td th:text="${cus.doorNo}"></td>
+          <td th:text="${cus.street}"></td>
+          <td th:text="${cus.city}"></td>
+          <td th:text="${cus.zipCode}"></td>
+          <!-- <td>
+          <a th:href="@{'/editCustomer/' + ${cus.Id}}" class="btn btn-success"><span>Edit</span></a>
           
            
           
-          </td>
+          </td> -->
           <td>
-          <form action="#" th:action="@{'/deleteEmployee/' + ${emp.Id}}" method="post">
+          <form action="#" th:action="@{'/deleteCustomer/' + ${cus.Id}}" method="post">
 			  <button type="submit" class="btn btn-danger">
 	  			Delete
 			 </button>
@@ -317,9 +317,9 @@
 <div id="addEmployeeModal" class="modal fade">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form action="#" th:action=@{/saveEmployee} th:object="${employee}" method="post" enctype="multipart/form-data">
+      <form action="#" th:action=@{/saveCustomer} th:object="${customer}" method="post" enctype="multipart/form-data">
         <div class="modal-header">
-          <h4 class="modal-title">Add Employee</h4>
+          <h4 class="modal-title">Add Customer</h4>
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         </div>
         <div class="modal-body">
@@ -331,7 +331,7 @@
 	      <label for="email">Email</label>
 	      <input class="form-control" id="email" type="email" name="email">
 	    </div>
-	     <div class="form-group">
+	      <div class="form-group">
 	      <label for="password">Password</label>
 	      <input class="form-control" id="password" type="password" name="password">
 	    </div>
@@ -376,86 +376,6 @@
     </div>
   </div>
 </div>
-<!-- Edit Modal HTML -->
-<div id="editEmployeeModal" class="modal fade">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <form action="#" th:action=@{/saveEmployee} th:object="${employee}" method="post" enctype="multipart/form-data">
-        <div class="modal-header">
-          <h4 class="modal-title">Add Employee</h4>
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        </div>
-        <input type="hidden" class="form-control" th:field="*{Id}" required/>
-        <div class="modal-body">
-          <div class="form-group">
-	      <label for="name">Name</label>
-	      <input class="form-control" id="name" type="text" name="*{name}">
-	    </div>
-	    <div class="form-group">
-	      <label for="email">Email</label>
-	      <input class="form-control" id="email" type="email" name="*{email}" disabled>
-	    </div>
-          <div class="form-group">
-	      <label for="age">Age</label>
-	      <input class="form-control" id="age" type="text" name="*{age}">
-	    </div>
-	     <div class="form-group">
-	     	<label for="gender">Gender</label>
-		     <select th:field="*{gender}" class="form-control" required>
-		     <option th:value="null">Select Gender</option>
-		    <option th:value="male">Male</option>
-		    <option th:value="female">Female</option>
-		    </select>
-		  </div>
-	    <div class="form-group">
-	      <label for="mobileNumber">Mobile Number</label>
-	      <input class="form-control" id="email" type="text" name="*{mobileNumber}">
-	    </div>
-	    <div class="form-group">
-	      <label for="doorNo">Door No</label>
-	      <input class="form-control" id="doorNo" type="text" name="*{doorNo}">
-	    </div>
-	    <div class="form-group">
-	      <label for="street">Street</label>
-	      <input class="form-control" id="street" type="text" name="*{street}">
-	    </div>
-	    <div class="form-group">
-	      <label for="city">City</label>
-	      <input class="form-control" id="city" type="text" name="*{city}">
-	    </div>
-	    <div class="form-group">
-	      <label for="zipCode">Zip Code</label>
-	      <input class="form-control" id="zipCode" type="text" name="*{zipCode}">
-	    </div>
-        </div>
-        <div class="modal-footer">
-          <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-          <input type="submit" class="btn btn-success" value="Update">
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-<!-- Delete Modal HTML -->
-<div id="deleteEmployeeModal" class="modal fade">
-  <div class="modal-dialog">
-    <div class="modal-content">
-     
-        <div class="modal-header">
-          <h4 class="modal-title">Delete Employee</h4>
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        </div>
-        <div class="modal-body">
-          <p>Are you sure you want to delete these Records?</p>
-          <p class="text-warning"><small>This action cannot be undone.</small></p>
-        </div>
-        <div class="modal-footer">
-          <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-          <input type="submit" class="btn btn-danger" value="Delete">
-        </div>
-     
-    </div>
-  </div>
 </div>
 
 

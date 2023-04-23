@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+ </head>
+<body>
+ <nav class="navbar navbar-expand-lg" style="background-color: #00FFFF;">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/" style="color: black"><b>Advanced Billing System</b></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+       <li class="nav-item">
+          <a class="nav-link" style="color:green" aria-current="page" href="/admin">Home</a>
+        </li>
+      </ul>
+      <form class="d-flex" role="search"> 
+        <button class="btn btn-primary me-2"><a href="/login" style="color:white;text-decoration:none">Logout</a></button>
+      </form>
+    </div>
+  </div>
+</nav><br>
+	 
+	 
+<div class="container">
+
+    <h2 align="center">Bill Generation</h2>
+    
+    
+        <div class="col-md-6">
+      <div class="form-group">
+    <label for="category">Select Category</label>
+    <select class="form-control" id="category" name="category" onChange="changecat(this.value);" required>
+		     <option th:value="null">Select Category</option>
+		    <option th:value="toothpaste">Toothpaste</option>
+		    <option th:value="brush">Brush</option>
+		    <option th:value="soap">Soap</option>
+		    <option th:value="shampoo">Shampoo</option>
+		    <option th:value="handwash">HandWash</option>
+		    <option th:value="oil">Oil</option>
+		    <option th:value="vegetables">Vegetables</option>
+		    <option th:value="biscuits">Biscuits</option>
+		    <option th:value="chocolates">Chocolates</option>
+		    <option th:value="chips">Chips</option>
+		    <option th:value="pickels">Pickels</option>
+		    <option th:value="cooldrinks">CoolDrinks</option>
+		    <option th:value="waterbottles">Water Bottles</option>
+		    </select>
+  </div>
+  </div> 
+   
+        <div class="col-md-6">
+      <div class="form-group">
+    <label for="itemName">Select ItemName</label>
+    <select class="form-control" id="itemName" name="itemName" required>
+    	<option value="" disabled selected>Select</option>
+   
+    </select>
+  </div>
+  </div> 
+     
+     
+       <div class="col-md-6">
+        <div class="form-group">
+          <label for="Quantity">Quantity</label>
+          <input type="number" class="form-control" placeholder="" id="Quantity" name="quanity" required>
+        </div>
+      </div>
+     
+   
+     
+<br>
+  
+
+
+    <button type="button" class="btn btn-dark" onClick="addcart()">Add</button>
+    
+     <div id="cart" style="float: right; padding-right: 120px;">
+     
+
+    
+
+ 
+</div>
+	
+	
+	<script th:inline="javascript">
+	
+	var cat = /*[[${itemMap}]]*/ 'default';
+	console.log(cat);
+	 function changecat(value) {
+	        if (value.length == 0) document.getElementById("itemName").innerHTML = "<option></option>";
+	        else {
+	            var itemOptions = "";
+	            for (categoryId in cat[value]) {
+	                itemOptions += "<option>" + cat[value][categoryId] + "</option>";
+	            }
+	            document.getElementById("itemName").innerHTML = itemOptions;
+	        }
+	    }
+	 
+	 
+	 var item=new Array();
+	 var bill= new Array();
+	 
+		var quant = new Array();
+		
+		var cost;
+
+	 function addcart()
+	 {
+	         //alert(itemname[x] +"is added of Cost "+itemcost[x]);
+	         
+	         var itemName = document.getElementById("itemName").value;
+	         console.log(itemName);
+	          var quantity = document.getElementById("Quantity").value;
+	          var it = itemName.split(",");
+	         item.push(it[0]);
+	         quant.push(quantity);
+	        
+	         bill.push(quantity * parseInt(it[1]));
+	         
+	         var items="<h1>Your Bill</h1><table border='1'><tr><th>Item Name</th><th>Item Cost</th><th>Remove Item</th></tr>";
+	      cost=0;
+	         for(var i=0;i<item.length;i++)
+	         {
+	                 items+="<tr><td>"+item[i]+"</td><td>"+bill[i]+"</td><td><button class='btn btn-danger' type='button' onclick='del("+(i)+")'>Remove</button></td></tr>";
+	                 cost=cost+bill[i];
+	         }
+	         
+	         items+="<tr><td>Total cost is </td><td rowspan='2'>"+cost+"</td><td><button class='btn btn-success' onclick='UpdateInventory()'>Checkout</button></td></tr>";
+	        
+	         items+="</table>";
+	         
+	         document.getElementById('cart').innerHTML=items;
+
+	         
+
+
+	      
+	 }
+	 
+	 
+	 function del(i){
+		 
+		 console.log(i);
+		 
+		item.splice(i,i+1);
+		bill.splice(i,i+1);
+		quant.splice(i,i+1);
+		 
+		 console.log(item);
+		 
+		   var items="<h1>Your Bill</h1><table border='1'><tr><th>Item Name</th><th>Item Cost</th><th>Remove Item</th></tr>";
+		      cost=0;
+		         for(var i=0;i<item.length;i++)
+		         {
+		                 items+="<tr><td>"+item[i]+"</td><td>"+bill[i]+"</td><td><button class='btn btn-success' type='button' onclick='del("+(i)+")'>Remove</button></td></tr>";
+		                 cost=cost+bill[i];
+		         }
+		         items+="<tr><td>Total cost is </td><td rowspan='2'>"+cost+"</td><td><button onclick='UpdateInventory()'>Checkout</button></td></tr>";
+		
+		         items+="</table>";
+		         
+		         document.getElementById('cart').innerHTML=items;
+	 }
+	 
+
+		 
+	 function UpdateInventory(){
+
+		
+		 var quantities = quant;
+		 var items = item;
+		  var totalcost = cost;
+
+		    var customerMail = prompt('Please enter Customer Mail Id');
+		  
+	     $.post("/updateInv",{
+		        "quantity" : quantities,
+		        "items" : items,
+		        "customerMail": customerMail,
+		        "cost" : totalcost
+		    });
+		 
+
+		   
+		
+		  window.location.replace('/admin');
+		}
+		
+	 
+	 
+	  
+	
+	</script>
+	
+	
+	
+
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>

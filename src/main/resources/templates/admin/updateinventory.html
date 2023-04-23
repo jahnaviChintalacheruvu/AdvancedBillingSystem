@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <title>Dashboard</title>
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+ <style>
+ body {
+  background: #f7f7f7;
+}
+
+.form-box {
+  max-width: 500px;
+  margin: auto;
+  padding: 50px;
+  background: #ffffff;
+  border: 10px solid #f2f2f2;
+}
+
+h4, p {
+  text-align: center;
+}
+.form-group{
+	margin:5px;
+}
+input,textarea, .back {
+  width: 100%;
+}
+ </style>
+ </head>
+ 
+<body>
+  <nav class="navbar navbar-expand-lg" style="background-color: #00FFFF;">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/" style="color: black"><b>Advanced Billing System</b></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+       <li class="nav-item">
+          <a class="nav-link" style="color:green" aria-current="page" href="/admin">Home</a>
+        </li>
+      </ul>
+      <form class="d-flex" role="search"> 
+        <button class="btn btn-primary me-2"><a href="/login" style="color:white;text-decoration:none">Logout</a></button>
+      </form>
+    </div>
+  </div>
+</nav><br>
+<div class="container">
+ <div class="form-box">
+  <h4>Edit Inventory</h4>
+  
+  <form action="#" th:action=@{/updateInventory} th:object="${inventory}" method="post" >
+   <input type="hidden" class="form-control" th:field="*{Id}" required/>
+        <div class="modal-body">
+            <div class="form-group">
+	      <label for="name">Name</label>
+	      <input class="form-control" id="name" type="text" th:value=${inventory.name} name="name">
+	    </div>
+	    
+	    <div class="form-group">
+	     	<label for="category">Category</label>
+		     <select th:field="${inventory.category}" class="form-control" required>
+		     <option th:value="null">Select Category</option>
+		    <option th:value="toothpaste">Toothpaste</option>
+		    <option th:value="brush">Brush</option>
+		    <option th:value="soap">Soap</option>
+		    <option th:value="shampoo">Shampoo</option>
+		    <option th:value="handwash">HandWash</option>
+		    <option th:value="oil">Oil</option>
+		    <option th:value="vegetables">Vegetables</option>
+		    <option th:value="biscuits">Biscuits</option>
+		    <option th:value="chocolates">Chocolates</option>
+		    <option th:value="chips">Chips</option>
+		    <option th:value="pickels">Pickels</option>
+		    <option th:value="cooldrinks">CoolDrinks</option>
+		    <option th:value="waterbottles">Water Bottles</option>
+		    </select>
+		  </div>
+	      <div class="form-group">
+	      <label for="quantity">Quantity</label>
+	      <input class="form-control" id="quantity" type="number" th:value=${inventory.quantity} name="quantity">
+	    </div>
+	      <div class="form-group">
+	      <label for="price">Price</label>
+	      <input class="form-control" id="price" type="text" th:value=${inventory.price} name="price">
+	    </div>
+   <br>
+    <input class="btn btn-primary" type="submit" value="Update" />
+    <br><br>
+    <a href="/employees" class="btn btn-dark back"><span>Back</span></a>
+    </div>
+  </form>
+</div>
+</div>
+
+
+ <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -20,8 +20,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.abs.app.model.Admin;
+import com.abs.app.model.Customer;
 import com.abs.app.model.Email;
+import com.abs.app.model.Employee;
 import com.abs.app.service.AdminService;
+import com.abs.app.service.CustomerService;
+import com.abs.app.service.EmployeeService;
 import com.abs.app.service.MessageService;
 
 
@@ -34,6 +38,12 @@ public class AdvanceBillingSystemController {
 	
 	@Autowired
 	private MessageService messageService;
+	
+	@Autowired
+	private EmployeeService employeeService;
+	
+	@Autowired
+	private CustomerService customerService;
 
 
 	
@@ -88,33 +98,95 @@ public class AdvanceBillingSystemController {
 	}
 	
 	@PostMapping("/authenticateLogin")
-	public String loginUser(@ModelAttribute("admin") Admin admin,RedirectAttributes attributes,HttpServletRequest request,HttpServletResponse response, Model model)
+	public String loginUser(@RequestParam("email") String email, @RequestParam("password") String password, @RequestParam("role") String role, RedirectAttributes attributes,HttpServletRequest request,HttpServletResponse response, Model model)
 	{
 		System.out.println("login**************************************** ");
-		Admin  adminModel = adminService.authenticateAdmin(admin);
-		String adminname="";
-		String adminemail="";
-		System.out.println("output=== "+adminModel);
-		if(adminModel != null)
-		{
-			@SuppressWarnings("unchecked")
-			List<String> messages = (List<String>) request.getSession().getAttribute("MY_SESSION_MESSAGES");
-			if (messages == null) {
-				messages = new ArrayList<>();
-				request.getSession().setAttribute("MY_SESSION_MESSAGES", messages);
+		if(role.equals("employee")) {
+			Employee emp = new Employee();
+			
+			emp.setEmail(email);
+			emp.setPassword(password);
+			
+			Employee employee = employeeService.authenticateEmployee(emp);
+			
+			if(employee != null)
+			{
+				@SuppressWarnings("unchecked")
+				List<String> messages = (List<String>) request.getSession().getAttribute("MY_SESSION_MESSAGES");
+				if (messages == null) {
+					messages = new ArrayList<>();
+					request.getSession().setAttribute("MY_SESSION_MESSAGES", messages);
+				}
+				
+					String empMail=employee.getEmail();
+					messages.add(empMail);
+					request.getSession().setAttribute("MY_SESSION_MESSAGES", messages);
+					return "redirect:/employee";
+				
 			}
-			
-				adminname=adminModel.getEmail().split("@")[0].toString().toUpperCase();
-				adminemail=adminModel.getEmail();
-				messages.add(adminemail);
-				request.getSession().setAttribute("MY_SESSION_MESSAGES", messages);
-				return "redirect:/admin";
-			
+			else {
+				model.addAttribute("errormsg", "Login Failed. Invalid Credentials. Please try again.");
+				return "home/error";
+			}
 		}
-		else {
-			model.addAttribute("errormsg", "Login Failed. Invalid Credentials. Please try again.");
-			return "home/error";
+		else if(role.equals("customer")) {
+			Customer cus = new Customer();
+			
+			cus.setEmail(email);
+			cus.setPassword(password);
+			
+			Customer customer = customerService.authenticateCustomer(cus);
+			
+			if(customer != null)
+			{
+				@SuppressWarnings("unchecked")
+				List<String> messages = (List<String>) request.getSession().getAttribute("MY_SESSION_MESSAGES");
+				if (messages == null) {
+					messages = new ArrayList<>();
+					request.getSession().setAttribute("MY_SESSION_MESSAGES", messages);
+				}
+				
+					String adminemail=customer.getEmail();
+					messages.add(adminemail);
+					request.getSession().setAttribute("MY_SESSION_MESSAGES", messages);
+					return "redirect:/customer";
+				
+			}
+			else {
+				model.addAttribute("errormsg", "Login Failed. Invalid Credentials. Please try again.");
+				return "home/error";
+			}
 		}
+		else if(role.equals("admin")) {
+			Admin admin = new Admin();
+			
+			admin.setEmail(email);
+			admin.setPassword(password);
+			
+			Admin  adminModel = adminService.authenticateAdmin(admin);
+			if(adminModel != null)
+			{
+				@SuppressWarnings("unchecked")
+				List<String> messages = (List<String>) request.getSession().getAttribute("MY_SESSION_MESSAGES");
+				if (messages == null) {
+					messages = new ArrayList<>();
+					request.getSession().setAttribute("MY_SESSION_MESSAGES", messages);
+				}
+				
+					String adminemail=adminModel.getEmail();
+					messages.add(adminemail);
+					request.getSession().setAttribute("MY_SESSION_MESSAGES", messages);
+					return "redirect:/admin";
+				
+			}
+			else {
+				model.addAttribute("errormsg", "Login Failed. Invalid Credentials. Please try again.");
+				return "home/error";
+			}
+		}
+		return null;
+		
+		
 		
 		
 	}
@@ -222,6 +294,54 @@ public class AdvanceBillingSystemController {
         request.getSession().invalidate();
         return "redirect:/";
     }
+	
+	@RequestMapping("/profile")
+    public String viewProfile(HttpSession session, Model model) {
+		@SuppressWarnings("unchecked")
+        List<String> messages = (List<String>) session.getAttribute("MY_SESSION_MESSAGES");
+		if(messages == null) {
+			model.addAttribute("errormsg", "Session Expired. Please Login Again");
+			return "home/error";
+		}
+		Admin admin = adminService.findAdmin(messages.get(0));
+		Employee employee = employeeService.findEmployee(messages.get(0));
+		Customer customer = customerService.findCustomer(messages.get(0));
+		if(admin != null) {
+			model.addAttribute("admin", admin);
+		}
+		else if(employee!=null) {
+			model.addAttribute("admin", employee);
+		}
+		else if(customer!=null) {
+			model.addAttribute("admin", customer);
+		}
+        return "home/profile";
+    }
+	
+	@PostMapping("/updateProfile")
+	public String updateProfile(@ModelAttribute("admin") Admin admin, Model model)
+	{
+		System.out.println("save===user");
+		int output =adminService.saveAdmin(admin);
+		if(output>0) {
+			return "redirect:/profile";
+		}
+		
+		else {
+			model.addAttribute("errormsg", "Operation failed. Please try again");
+			return "home/error";
+		}
+		
+	}
+	
+	@PostMapping("/deleteProfile/{id}")
+	public String deleteProfile(@PathVariable(name="id") Long id,HttpServletRequest request, Model model)
+	{
+		adminService.deleteAdmin(id);
+		 request.getSession().invalidate();
+		 model.addAttribute("errormsg", "Your Account Deleted Successfully");
+			return "home/error";
+	}
 	
 	
 	@GetMapping("/resetPassword")
