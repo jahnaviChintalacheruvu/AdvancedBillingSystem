@@ -251,56 +251,50 @@
     <div class="table-title">
       <div class="row">
         <div class="col-sm-3">
-          <h2>Manage <b>Employees</b></h2>
+          <h2>Manage <b>Shifts</b></h2>
         </div>
         <div class="col-sm-3">
-		   <form class="d-flex" role="search" action="#" th:action=@{/searchEmployee} method="post">
+		   <form class="d-flex" role="search" action="#" th:action=@{/searchShift} method="post">
 		  <input style="width:200px;" type="text" class="form-control" name="search" placeholder="Search ......" >
 		  <button type="submit" class="btn btn-success"><span>Search</span></button>
 		  </form>
 		  </div>
 		  
         <div class="col-sm-6">
-          <a href="#addEmployeeModal" class="btn btn-success" data-toggle="modal"><span>Add New Employee</span></a>
+          <a href="#addEmployeeModal" class="btn btn-success" data-toggle="modal"><span>Add New Shift</span></a>
         </div>
       </div>
     </div>
     <table class="table table-striped table-hover">
       <thead>
         <tr>
-                    <th>Name</th>
-          <th>Email</th>
-          <th>Age</th>
-          <th>Gender</th>
-          <th>Phone</th>
-          <th>Door No</th>
-          <th>Street</th>
-          <th>City</th>
-          <th>ZipCode</th>
+                    
+          <th>Employee Id</th>
+          <th>Shift Start Time </th>
+          <th>Shift End Time</th>
+          <th>Shift Start Date</th>
+          <th>Shift End Date</th>
           <th>Actions</th>
           <th></th>
         </tr>
       </thead>
       <tbody>
-      <th:block th:each="emp : ${employees}">
+      <th:block th:each="shift : ${shifts}">
         <tr> 
-          <td th:text="${emp.name}"></td>
-          <td th:text="${emp.email}"></td>
-          <td th:text="${emp.age}"></td>
-          <td th:text="${emp.gender}"></td>
-          <td th:text="${emp.mobileNumber}"></td>
-          <td th:text="${emp.doorNo}"></td>
-          <td th:text="${emp.street}"></td>
-          <td th:text="${emp.city}"></td>
-          <td th:text="${emp.zipCode}"></td>
+          <td th:text="${shift.empId}"></td>
+          <td th:text="${shift.startTime}"></td>
+          <td th:text="${shift.endTime}"></td>
+          <td th:text="${shift.fromDate}"></td>
+          <td th:text="${shift.toDate}"></td>
+         
           <td>
-          <a th:href="@{'/editEmployee/' + ${emp.Id}}" class="btn btn-success"><span>Edit</span></a>
+          <a th:href="@{'/editShift/' + ${shift.Id}}" class="btn btn-success"><span>Edit</span></a>
           
            
           
           </td>
           <td>
-          <form action="#" th:action="@{'/deleteEmployee/' + ${emp.Id}}" method="post">
+          <form action="#" th:action="@{'/deleteShift/' + ${shift.Id}}" method="post">
 			  <button type="submit" class="btn btn-danger">
 	  			Delete
 			 </button>
@@ -317,57 +311,36 @@
 <div id="addEmployeeModal" class="modal fade">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form action="#" th:action=@{/saveEmployee} th:object="${employee}" method="post" enctype="multipart/form-data">
+      <form action="#" th:action=@{/saveShift} th:object="${shift}" method="post" enctype="multipart/form-data">
         <div class="modal-header">
           <h4 class="modal-title">Add Employee</h4>
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         </div>
         <div class="modal-body">
-          <div class="form-group">
-	      <label for="name">Name</label>
-	      <input class="form-control" id="name" type="text" name="name">
-	    </div>
+	          <div class="form-group">
+	    <label for="employee">Employee</label>
+	     <select class="form-control" th:field="*{empId}"  id="dropOperator" required>
+	    <option value="0">Select Employee</option>
+	    <option th:each="emp : ${employees}" th:value="${emp.Id}" th:text="${emp.email}"></option>
+	    </select>
+	    </div><br>
 	    <div class="form-group">
-	      <label for="email">Email</label>
-	      <input class="form-control" id="email" type="email" name="email">
+	      <label for="startTime">Shift Start Time</label>
+	      <input class="form-control" id="startTime" type="time" name="startTime">
+	    </div>
+          <div class="form-group">
+	      <label for="endTime">Shift End Time</label>
+	      <input class="form-control" id="endTime" type="time" name="endTime">
 	    </div>
 	     <div class="form-group">
-	      <label for="password">Password</label>
-	      <input class="form-control" id="password" type="password" name="password">
-	    </div>
-          <div class="form-group">
-	      <label for="age">Age</label>
-	      <input class="form-control" id="age" type="text" name="age">
-	    </div>
-	     <div class="form-group">
-	     	<label for="gender">Gender</label>
-		     <select th:field="*{gender}" class="form-control" required>
-		     <option th:value="null">Select Gender</option>
-		    <option th:value="male">Male</option>
-		    <option th:value="female">Female</option>
-		    </select>
-		  </div>
-	    <div class="form-group">
-	      <label for="mobileNumber">Mobile Number</label>
-	      <input class="form-control" id="email" type="text" name="mobileNumber">
+	      <label for="fromDate">Shift Start Date</label>
+	      <input class="form-control" id="fromDate" type="date" name="fromDate">
 	    </div>
 	    <div class="form-group">
-	      <label for="doorNo">Door No</label>
-	      <input class="form-control" id="doorNo" type="text" name="doorNo">
+	      <label for="toDate">Shift End Date</label>
+	      <input class="form-control" id="toDate" type="date" name="toDate">
 	    </div>
-	    <div class="form-group">
-	      <label for="street">Street</label>
-	      <input class="form-control" id="street" type="text" name="street">
-	    </div>
-	    <div class="form-group">
-	      <label for="city">City</label>
-	      <input class="form-control" id="city" type="text" name="city">
-	    </div>
-	    <div class="form-group">
-	      <label for="zipCode">Zip Code</label>
-	      <input class="form-control" id="zipCode" type="text" name="zipCode">
-	    </div>
-        </div>
+	    
         <div class="modal-footer">
           <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
           <input type="submit" class="btn btn-success" value="Add">
@@ -376,58 +349,41 @@
     </div>
   </div>
 </div>
-<!-- Edit Modal HTML -->
+
 <div id="editEmployeeModal" class="modal fade">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form action="#" th:action=@{/saveEmployee} th:object="${employee}" method="post" enctype="multipart/form-data">
+      <form action="#" th:action=@{/saveShift} th:object="${shift}" method="post" enctype="multipart/form-data">
         <div class="modal-header">
-          <h4 class="modal-title">Add Employee</h4>
+          <h4 class="modal-title">Add Shift</h4>
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         </div>
         <input type="hidden" class="form-control" th:field="*{Id}" required/>
         <div class="modal-body">
-          <div class="form-group">
-	      <label for="name">Name</label>
-	      <input class="form-control" id="name" type="text" name="*{name}">
-	    </div>
+               <div class="form-group">
+	    <label for="employee">Employee</label>
+	     <select class="form-control" th:field="*{empId}"  id="dropOperator" required>
+	    <option value="0">Select Employee</option>
+	    <option th:each="emp : ${employees}" th:value="${emp.Id}" th:text="${emp.email}"></option>
+	    </select>
+	    </div><br>
 	    <div class="form-group">
-	      <label for="email">Email</label>
-	      <input class="form-control" id="email" type="email" name="*{email}" disabled>
+	      <label for="startTime">Shift Start Time</label>
+	      <input class="form-control" id="startTime" type="time" name="*{startTime}">
 	    </div>
           <div class="form-group">
-	      <label for="age">Age</label>
-	      <input class="form-control" id="age" type="text" name="*{age}">
+	      <label for="endTime">Shift End Time</label>
+	      <input class="form-control" id="endTime" type="time" name="*{endTime}">
 	    </div>
 	     <div class="form-group">
-	     	<label for="gender">Gender</label>
-		     <select th:field="*{gender}" class="form-control" required>
-		     <option th:value="null">Select Gender</option>
-		    <option th:value="male">Male</option>
-		    <option th:value="female">Female</option>
-		    </select>
-		  </div>
-	    <div class="form-group">
-	      <label for="mobileNumber">Mobile Number</label>
-	      <input class="form-control" id="email" type="text" name="*{mobileNumber}">
+	      <label for="fromDate">Shift Start Date</label>
+	      <input class="form-control" id="fromDate" type="date" name="*{fromDate}">
 	    </div>
 	    <div class="form-group">
-	      <label for="doorNo">Door No</label>
-	      <input class="form-control" id="doorNo" type="text" name="*{doorNo}">
+	      <label for="toDate">Shift End Date</label>
+	      <input class="form-control" id="toDate" type="date" name="*{toDate}">
 	    </div>
-	    <div class="form-group">
-	      <label for="street">Street</label>
-	      <input class="form-control" id="street" type="text" name="*{street}">
-	    </div>
-	    <div class="form-group">
-	      <label for="city">City</label>
-	      <input class="form-control" id="city" type="text" name="*{city}">
-	    </div>
-	    <div class="form-group">
-	      <label for="zipCode">Zip Code</label>
-	      <input class="form-control" id="zipCode" type="text" name="*{zipCode}">
-	    </div>
-        </div>
+	            </div>
         <div class="modal-footer">
           <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
           <input type="submit" class="btn btn-success" value="Update">
@@ -436,27 +392,7 @@
     </div>
   </div>
 </div>
-<!-- Delete Modal HTML -->
-<div id="deleteEmployeeModal" class="modal fade">
-  <div class="modal-dialog">
-    <div class="modal-content">
-     
-        <div class="modal-header">
-          <h4 class="modal-title">Delete Employee</h4>
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        </div>
-        <div class="modal-body">
-          <p>Are you sure you want to delete these Records?</p>
-          <p class="text-warning"><small>This action cannot be undone.</small></p>
-        </div>
-        <div class="modal-footer">
-          <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-          <input type="submit" class="btn btn-danger" value="Delete">
-        </div>
-     
-    </div>
-  </div>
-</div>
+
 
 
  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

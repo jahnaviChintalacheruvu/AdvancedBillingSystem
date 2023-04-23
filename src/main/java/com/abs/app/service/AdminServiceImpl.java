@@ -12,7 +12,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.abs.app.dao.AdminRepo;
+import com.abs.app.dao.BillRepo;
+import com.abs.app.dao.InventoryRepo;
+import com.abs.app.dao.RewardRepo;
+import com.abs.app.dao.ShiftRepo;
 import com.abs.app.model.Admin;
+import com.abs.app.model.Bill;
+import com.abs.app.model.Employee;
+import com.abs.app.model.Inventory;
+import com.abs.app.model.Reward;
+import com.abs.app.model.Shift;
 
 
 @Service
@@ -20,6 +29,18 @@ public class AdminServiceImpl implements AdminService{
 	
 	@Autowired
 	private AdminRepo adminRepo;
+	
+	@Autowired
+	private ShiftRepo shiftRepo;
+	
+	@Autowired
+	private InventoryRepo inventoryRepo;
+	
+	@Autowired
+	private BillRepo billRepo;
+	
+	@Autowired
+	private RewardRepo rewardRepo;
 	
 	
 	
@@ -113,10 +134,77 @@ public class AdminServiceImpl implements AdminService{
 			
 	}
 
+	@Override
+	public List<Shift> getAllShifts() {
+		// TODO Auto-generated method stub
+		
+		return shiftRepo.findAll();
+	}
 
-	
-	
+	@Override
+	public void saveShift(Shift shift) {
+		// TODO Auto-generated method stub
+		shiftRepo.save(shift);
+		
+	}
 
-	
+	@Override
+	public Shift getShiftById(Long id) {
+		// TODO Auto-generated method stub
+		return shiftRepo.findShiftById(id);
+	}
+
+	@Override
+	public void updateShift(Shift shift) {
+		shiftRepo.save(shift);
+		
+	}
+
+	@Override
+	public void deleteShift(Long id) {
+		// TODO Auto-generated method stub
+		shiftRepo.delete(shiftRepo.findShiftById(id));
+		
+	}
+
+	@Override
+	public List<Inventory> getAllInventories() {
+		// TODO Auto-generated method stub
+		return inventoryRepo.findAll();
+	}
+
+	@Override
+	public void saveInventory(Inventory inventory) {
+		// TODO Auto-generated method stub
+		inventoryRepo.save(inventory);
+		
+	}
+
+	@Override
+	public Inventory getInventoryById(Long id) {
+		// TODO Auto-generated method stub
+		return inventoryRepo.findInventoryById(id);
+	}
+
+	@Override
+	public void updateInventory(Inventory inventory) {
+		// TODO Auto-generated method stub
+		inventoryRepo.save(inventory);
+		
+	}
+
+	@Override
+	public void saveBill(Bill bill) {
+		// TODO Auto-generated method stub
+		billRepo.save(bill);
+		
+	}
+
+	@Override
+	public void saveReward(Reward reward) {
+		// TODO Auto-generated method stub
+		rewardRepo.save(reward);
+		
+	}
 
 }
