@@ -58,7 +58,12 @@ public class EmployeeController {
 			model.addAttribute("errormsg", "Session Expired. Please Login Again");
 			return "home/error";
 		}
+        
+      
         model.addAttribute("sessionMessages", messages);
+		String role = adminService.findRole(messages.get(0));
+		
+		model.addAttribute("role", role);
 
 		return "employee/welcomeemployee";
 	}

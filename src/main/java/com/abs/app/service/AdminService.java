@@ -47,5 +47,7 @@ public interface AdminService {
 
 	void saveReward(Reward reward);
 
+	String findRole(String string);
+
 
 }

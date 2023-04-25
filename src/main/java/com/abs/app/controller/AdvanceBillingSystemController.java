@@ -77,7 +77,7 @@ public class AdvanceBillingSystemController {
 			model.addAttribute("errormsg", "Username already exists");
 			return "home/error";
 		}
-
+		admin.setRole("admin");
 		int output = adminService.saveAdmin(admin);
 		
 		if (output > 0) {
@@ -315,6 +315,12 @@ public class AdvanceBillingSystemController {
 		else if(customer!=null) {
 			model.addAttribute("admin", customer);
 		}
+		
+        model.addAttribute("sessionMessages", messages);
+		String role = adminService.findRole(messages.get(0));
+		
+		model.addAttribute("role", role);
+		
         return "home/profile";
     }
 	

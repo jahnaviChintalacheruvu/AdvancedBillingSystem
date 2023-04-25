@@ -236,9 +236,17 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <th:block th:if="${role} =='admin'">
        <li class="nav-item">
           <a class="nav-link" style="color:green" aria-current="page" href="/admin">Home</a>
         </li>
+        </th:block>
+        <th:block th:if="${role} =='employee'">
+       <li class="nav-item">
+          <a class="nav-link" style="color:green" aria-current="page" href="/employee">Home</a>
+        </li>
+        </th:block>
+        
       </ul>
       <form class="d-flex" role="search"> 
         <button class="btn btn-primary me-2"><a href="/login" style="color:white;text-decoration:none">Logout</a></button>
@@ -347,6 +355,15 @@
 		    <option th:value="female">Female</option>
 		    </select>
 		  </div>
+		  
+		  <div class="form-group">
+	     	<label for="role">Role</label>
+		     <select th:field="*{role}" class="form-control" required>
+		     <option th:value="null">Select Role</option>
+		    <option th:value="employee">Employee</option>
+		    <option th:value="manager">Manager</option>
+		    </select>
+		  </div>
 	    <div class="form-group">
 	      <label for="mobileNumber">Mobile Number</label>
 	      <input class="form-control" id="email" type="text" name="mobileNumber">
@@ -405,6 +422,14 @@
 		     <option th:value="null">Select Gender</option>
 		    <option th:value="male">Male</option>
 		    <option th:value="female">Female</option>
+		    </select>
+		  </div>
+		  <div class="form-group">
+	     	<label for="role">Role</label>
+		     <select th:field="*{role}" class="form-control" required>
+		     <option th:value="null">Select Role</option>
+		    <option th:value="employee">Male</option>
+		    <option th:value="manager">Female</option>
 		    </select>
 		  </div>
 	    <div class="form-group">

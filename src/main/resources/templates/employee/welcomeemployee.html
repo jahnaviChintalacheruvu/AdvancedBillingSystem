@@ -38,7 +38,26 @@
   <br>
   
   <div class="row">
-	  
+	   <th:block th:if="${role} =='manager'">
+	
+	  <div class="card" style="width: 18rem;margin-right:20px;">
+		  <img class="card-img-top" src="images/employees.jpeg" alt="Card image">
+		  <div class="card-body">
+		    <h4 class="card-title">Manage Employees</h4>
+		    <p class="card-text">Create, Edit, Delete, View, Search</p>
+		    <a href="/employees" class="btn btn-primary">Click Here</a>
+		  </div>
+  	  </div>
+  	  
+  	  <div class="card" style="width: 18rem;margin-right:20px;">
+		  <img class="card-img-top" src="images/shifts.jpeg" alt="Card image">
+		  <div class="card-body">
+		    <h4 class="card-title">Manage Shifts</h4>
+		    <p class="card-text">Create, Update, Delete, View</p>
+		    <a href="/shifts" class="btn btn-primary">Click Here</a>
+		  </div>
+  	  </div>
+  	  </th:block>
   	  
   	  <div class="card" style="width:18rem;margin-right:20px;">
 		  <img class="card-img-top" src="images/customers.jpeg" alt="Card image">

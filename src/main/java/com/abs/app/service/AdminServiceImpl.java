@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.abs.app.dao.AdminRepo;
 import com.abs.app.dao.BillRepo;
+import com.abs.app.dao.EmployeeRepo;
 import com.abs.app.dao.InventoryRepo;
 import com.abs.app.dao.RewardRepo;
 import com.abs.app.dao.ShiftRepo;
@@ -29,6 +30,9 @@ public class AdminServiceImpl implements AdminService{
 	
 	@Autowired
 	private AdminRepo adminRepo;
+	
+	@Autowired
+	private EmployeeRepo employeeRepo;
 	
 	@Autowired
 	private ShiftRepo shiftRepo;
@@ -204,6 +208,23 @@ public class AdminServiceImpl implements AdminService{
 	public void saveReward(Reward reward) {
 		// TODO Auto-generated method stub
 		rewardRepo.save(reward);
+		
+	}
+
+	@Override
+	public String findRole(String email) {
+		// TODO Auto-generated method stub
+		
+		Admin admin = adminRepo.findbyEmail(email);
+		Employee emp = employeeRepo.findbyEmail(email);
+		if(admin != null) {
+			return "admin";
+		}
+		else if(emp != null) {
+			return emp.getRole();
+		}else {
+			return "customer";
+		}
 		
 	}
 

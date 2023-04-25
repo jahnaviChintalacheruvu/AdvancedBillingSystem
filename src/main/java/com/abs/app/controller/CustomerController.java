@@ -38,6 +38,8 @@ import com.abs.app.service.EmployeeService;
 @Controller
 public class CustomerController {
 	
+	@Autowired
+	private CustomerService customerService;
 
 	
 	@GetMapping("/customer")
@@ -53,6 +55,44 @@ public class CustomerController {
         model.addAttribute("sessionMessages", messages);
 
 		return "customer/welcomecustomer";
+	}
+	
+	@GetMapping("/bills")
+	public String getBillsPage( Model model, HttpSession session)
+	{
+		@SuppressWarnings("unchecked")
+        List<String> messages = (List<String>) session.getAttribute("MY_SESSION_MESSAGES");
+
+		if(messages == null) {
+			model.addAttribute("errormsg", "Session Expired. Please Login Again");
+			return "home/error";
+		}
+        model.addAttribute("sessionMessages", messages);
+        
+        List<Bill> bills = customerService.getAllBills();
+
+        model.addAttribute("bills", bills);
+
+		return "customer/bills";
+	}
+	
+	@GetMapping("/rewards")
+	public String getRewardsPage( Model model, HttpSession session)
+	{
+		@SuppressWarnings("unchecked")
+        List<String> messages = (List<String>) session.getAttribute("MY_SESSION_MESSAGES");
+
+		if(messages == null) {
+			model.addAttribute("errormsg", "Session Expired. Please Login Again");
+			return "home/error";
+		}
+        model.addAttribute("sessionMessages", messages);
+        
+        List<Reward> rewards = customerService.getAllRewads();
+
+        model.addAttribute("rewards", rewards);
+
+		return "customer/rewards";
 	}
 	
 }

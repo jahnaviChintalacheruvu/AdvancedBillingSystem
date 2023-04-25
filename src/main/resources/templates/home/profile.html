@@ -24,9 +24,21 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-      <li class="nav-item">
-          <a class="nav-link active" style="color:green" aria-current="page" href="/admin">Home</a>
+     <th:block th:if="${role} =='admin'">
+       <li class="nav-item">
+          <a class="nav-link" style="color:green" aria-current="page" href="/admin">Home</a>
         </li>
+        </th:block>
+        <th:block th:if="${role} =='employee'">
+       <li class="nav-item">
+          <a class="nav-link" style="color:green" aria-current="page" href="/employee">Home</a>
+        </li>
+        </th:block>
+         <th:block th:if="${role} =='customer'">
+       <li class="nav-item">
+          <a class="nav-link" style="color:green" aria-current="page" href="/customer">Home</a>
+        </li>
+        </th:block>
    
       </ul>
       <form class="d-flex" role="search">
