@@ -19,4 +19,9 @@ public interface EmployeeService {
 
 	void saveEmployee(Employee employee);
 
+	Employee authenticateEmployee(Employee emp);
+
+	Employee findEmployee(String email);
+
+
 }

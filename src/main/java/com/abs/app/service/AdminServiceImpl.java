@@ -12,11 +12,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.abs.app.dao.AdminRepo;
+import com.abs.app.dao.BillRepo;
+import com.abs.app.dao.EmployeeRepo;
 import com.abs.app.dao.InventoryRepo;
+import com.abs.app.dao.RewardRepo;
 import com.abs.app.dao.ShiftRepo;
 import com.abs.app.model.Admin;
+import com.abs.app.model.Bill;
 import com.abs.app.model.Employee;
 import com.abs.app.model.Inventory;
+import com.abs.app.model.Reward;
 import com.abs.app.model.Shift;
 
 
@@ -27,10 +32,19 @@ public class AdminServiceImpl implements AdminService{
 	private AdminRepo adminRepo;
 	
 	@Autowired
+	private EmployeeRepo employeeRepo;
+	
+	@Autowired
 	private ShiftRepo shiftRepo;
 	
 	@Autowired
 	private InventoryRepo inventoryRepo;
+	
+	@Autowired
+	private BillRepo billRepo;
+	
+	@Autowired
+	private RewardRepo rewardRepo;
 	
 	
 	
@@ -183,10 +197,35 @@ public class AdminServiceImpl implements AdminService{
 		
 	}
 
+	@Override
+	public void saveBill(Bill bill) {
+		// TODO Auto-generated method stub
+		billRepo.save(bill);
+		
+	}
 
-	
-	
+	@Override
+	public void saveReward(Reward reward) {
+		// TODO Auto-generated method stub
+		rewardRepo.save(reward);
+		
+	}
 
-	
+	@Override
+	public String findRole(String email) {
+		// TODO Auto-generated method stub
+		
+		Admin admin = adminRepo.findbyEmail(email);
+		Employee emp = employeeRepo.findbyEmail(email);
+		if(admin != null) {
+			return "admin";
+		}
+		else if(emp != null) {
+			return emp.getRole();
+		}else {
+			return "customer";
+		}
+		
+	}
 
 }

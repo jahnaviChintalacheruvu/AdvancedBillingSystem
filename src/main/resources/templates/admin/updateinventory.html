@@ -38,9 +38,16 @@ input,textarea, .back {
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+       <th:block th:if="${role} =='admin'">
        <li class="nav-item">
           <a class="nav-link" style="color:green" aria-current="page" href="/admin">Home</a>
         </li>
+        </th:block>
+        <th:block th:if="${role} =='employee'">
+       <li class="nav-item">
+          <a class="nav-link" style="color:green" aria-current="page" href="/employee">Home</a>
+        </li>
+        </th:block>
       </ul>
       <form class="d-flex" role="search"> 
         <button class="btn btn-primary me-2"><a href="/login" style="color:white;text-decoration:none">Logout</a></button>

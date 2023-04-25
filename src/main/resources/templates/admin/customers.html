@@ -236,9 +236,16 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <th:block th:if="${role} =='admin'">
        <li class="nav-item">
           <a class="nav-link" style="color:green" aria-current="page" href="/admin">Home</a>
         </li>
+        </th:block>
+        <th:block th:if="${role} =='employee'">
+       <li class="nav-item">
+          <a class="nav-link" style="color:green" aria-current="page" href="/employee">Home</a>
+        </li>
+        </th:block>
       </ul>
       <form class="d-flex" role="search"> 
         <button class="btn btn-primary me-2"><a href="/login" style="color:white;text-decoration:none">Logout</a></button>
@@ -330,6 +337,10 @@
 	    <div class="form-group">
 	      <label for="email">Email</label>
 	      <input class="form-control" id="email" type="email" name="email">
+	    </div>
+	      <div class="form-group">
+	      <label for="password">Password</label>
+	      <input class="form-control" id="password" type="password" name="password">
 	    </div>
           <div class="form-group">
 	      <label for="age">Age</label>

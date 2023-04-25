@@ -27,6 +27,7 @@ public class Admin {
 	private String firstname;
 	private String lastname;
 	private String age;
+	private String role;
 	private String mobileNumber;
 	private String doorNo;
 	private String street;

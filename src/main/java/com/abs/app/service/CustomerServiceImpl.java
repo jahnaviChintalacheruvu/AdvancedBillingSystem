@@ -6,15 +6,25 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.abs.app.dao.BillRepo;
 import com.abs.app.dao.CustomerRepo;
+import com.abs.app.dao.RewardRepo;
+import com.abs.app.model.Bill;
 import com.abs.app.model.Customer;
 import com.abs.app.model.Employee;
+import com.abs.app.model.Reward;
 
 @Service
 public class CustomerServiceImpl implements CustomerService{
 	
 	@Autowired
 	private CustomerRepo customerRepo;
+	
+	@Autowired
+	private BillRepo billRepo;
+	
+	@Autowired
+	private RewardRepo rewardRepo;
 
 	@Override
 	public List<Customer> searchCustomer(String search) {
@@ -43,5 +53,39 @@ public class CustomerServiceImpl implements CustomerService{
 		// TODO Auto-generated method stub
 		return customerRepo.findAll();
 	}
+
+public Customer authenticateCustomer(Customer customer) {
+		
+		
+		
+		List<Customer> customers = customerRepo.findAll();
+		List<Customer> veifiedCustomer = customers.stream().filter(n -> (n.getEmail().equals(customer.getEmail()) || n.getName().equals(customer.getEmail())) && n.getPassword().equals(customer.getPassword())).collect(Collectors.toList());
+		
+		if(veifiedCustomer.size() ==1) {
+			return veifiedCustomer.get(0);
+		}
+		else {
+			return null;
+		}
+			
+	}
+
+@Override
+public Customer findCustomer(String email) {
+	// TODO Auto-generated method stub
+	return customerRepo.findbyEmail(email);
+}
+
+@Override
+public List<Bill> getAllBills() {
+	// TODO Auto-generated method stub
+	return billRepo.findAll();
+}
+
+@Override
+public List<Reward> getAllRewads() {
+	// TODO Auto-generated method stub
+	return rewardRepo.findAll();
+}
 
 }

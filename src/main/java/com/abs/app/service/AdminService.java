@@ -3,8 +3,10 @@ package com.abs.app.service;
 import java.util.List;
 
 import com.abs.app.model.Admin;
+import com.abs.app.model.Bill;
 import com.abs.app.model.Employee;
 import com.abs.app.model.Inventory;
+import com.abs.app.model.Reward;
 import com.abs.app.model.Shift;
 
 public interface AdminService {
@@ -40,6 +42,12 @@ public interface AdminService {
 	Inventory getInventoryById(Long id);
 
 	void updateInventory(Inventory inventory);
+
+	void saveBill(Bill bill);
+
+	void saveReward(Reward reward);
+
+	String findRole(String string);
 
 
 }
