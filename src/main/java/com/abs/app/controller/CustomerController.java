@@ -40,6 +40,7 @@ public class CustomerController {
 	
 	@Autowired
 	private CustomerService customerService;
+	
 
 	
 	@GetMapping("/customer")
@@ -69,7 +70,7 @@ public class CustomerController {
 		}
         model.addAttribute("sessionMessages", messages);
         
-        List<Bill> bills = customerService.getAllBills();
+        List<Bill> bills = customerService.getAllBills(messages.get(0));
 
         model.addAttribute("bills", bills);
 
@@ -88,11 +89,22 @@ public class CustomerController {
 		}
         model.addAttribute("sessionMessages", messages);
         
-        List<Reward> rewards = customerService.getAllRewads();
+        List<Reward> rewards = customerService.getAllRewads(messages.get(0));
 
         model.addAttribute("rewards", rewards);
 
 		return "customer/rewards";
 	}
 	
+	
+	@PostMapping("/searchBills")
+	public String searchBills(Model model, HttpSession session, @RequestParam("search") String search ) {
+		
+        List<Bill> bills = customerService.searchBill(search);
+        model.addAttribute("bills", bills);
+        Bill bill = new Bill();
+        model.addAttribute("bill", bill);
+       
+		return "customer/bills";
+	}
 }

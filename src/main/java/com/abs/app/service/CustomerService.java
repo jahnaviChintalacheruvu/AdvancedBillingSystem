@@ -21,8 +21,10 @@ public interface CustomerService {
 
 	Customer findCustomer(String email);
 
-	List<Bill> getAllBills();
+	List<Bill> getAllBills(String email);
 
-	List<Reward> getAllRewads();
+	List<Reward> getAllRewads(String email);
+
+	List<Bill> searchBill(String search);
 
 }

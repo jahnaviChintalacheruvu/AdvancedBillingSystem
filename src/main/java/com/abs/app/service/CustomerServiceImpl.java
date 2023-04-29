@@ -77,15 +77,25 @@ public Customer findCustomer(String email) {
 }
 
 @Override
-public List<Bill> getAllBills() {
+public List<Bill> getAllBills(String email) {
 	// TODO Auto-generated method stub
-	return billRepo.findAll();
+	return billRepo.findAll().stream().filter(bill -> bill.getCustomerMail().equals(email)).collect(Collectors.toList());
 }
 
 @Override
-public List<Reward> getAllRewads() {
+public List<Reward> getAllRewads(String email) {
 	// TODO Auto-generated method stub
-	return rewardRepo.findAll();
+	return rewardRepo.findAll().stream().filter(re-> re.getCustomerMail().equals(email)).collect(Collectors.toList());
+}
+
+@Override
+public List<Bill> searchBill(String search) {
+	// TODO Auto-generated method stub
+	List<Bill> billList = billRepo.findAll();
+	
+	
+	
+	return billList.stream().filter(emp -> emp.getTotalCost().equals(search) || emp.getNoOfItems().equals(search)).collect(Collectors.toList());
 }
 
 }
