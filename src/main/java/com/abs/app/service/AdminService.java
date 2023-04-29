@@ -35,7 +35,7 @@ public interface AdminService {
 
 	void deleteShift(Long id);
 
-	List<Inventory> getAllInventories();
+	List<Inventory> getAllInventories(String email);
 
 	void saveInventory(Inventory inventory);
 
@@ -48,6 +48,14 @@ public interface AdminService {
 	void saveReward(Reward reward);
 
 	String findRole(String string);
+
+	void deleteInventory(Long id);
+
+	List<Bill> getAllTodayBills(String adminEmail);
+
+	void removeTodayBills(String string);
+
+	List<Shift> findShiftTime(String string);
 
 
 }

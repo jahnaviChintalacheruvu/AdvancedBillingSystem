@@ -9,13 +9,13 @@ import com.abs.app.model.Reward;
 
 public interface CustomerService {
 
-	List<Customer> searchCustomer(String search);
+	List<Customer> searchCustomer(String search, String email);
 
 	void deleteCustomer(Long id);
 
 	void saveCustomer(Customer customer);
 
-	List<Customer> getAllCustomers();
+	List<Customer> getAllCustomers(String email);
 
 	Customer authenticateCustomer(Customer cus);
 
@@ -26,5 +26,7 @@ public interface CustomerService {
 	List<Reward> getAllRewads(String email);
 
 	List<Bill> searchBill(String search);
+
+
 
 }

@@ -246,6 +246,11 @@
           <a class="nav-link" style="color:green" aria-current="page" href="/employee">Home</a>
         </li>
         </th:block>
+          <th:block th:if="${role} =='manager'">
+       <li class="nav-item">
+          <a class="nav-link" style="color:green" aria-current="page" href="/employee">Home</a>
+        </li>
+        </th:block>
       </ul>
       <form class="d-flex" role="search"> 
         <button class="btn btn-primary me-2"><a href="/login" style="color:white;text-decoration:none">Logout</a></button>
@@ -260,12 +265,7 @@
         <div class="col-sm-3">
           <h2>Manage <b>Shifts</b></h2>
         </div>
-        <div class="col-sm-3">
-		   <form class="d-flex" role="search" action="#" th:action=@{/searchShift} method="post">
-		  <input style="width:200px;" type="text" class="form-control" name="search" placeholder="Search ......" >
-		  <button type="submit" class="btn btn-success"><span>Search</span></button>
-		  </form>
-		  </div>
+        
 		  
         <div class="col-sm-6">
           <a href="#addEmployeeModal" class="btn btn-success" data-toggle="modal"><span>Add New Shift</span></a>

@@ -2,6 +2,7 @@ package com.abs.app.controller;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -66,8 +67,6 @@ public class AdminController {
 	@GetMapping("/employees")
 	public String employees(Model model, HttpSession session) {
 
-		List<Employee> employees = employeeService.getAllEmployees();
-		model.addAttribute("employees", employees);
 		Employee employee = new Employee();
 		model.addAttribute("employee", employee);
 		
@@ -80,8 +79,21 @@ public class AdminController {
 		}
         model.addAttribute("sessionMessages", messages);
 		
+		String role = adminService.findRole(messages.get(0));
+		model.addAttribute("role", role);
+		List<Employee> employees = null;
 		
-		model.addAttribute("role", adminService.findRole(messages.get(0)));
+		if(role.equals("admin")) {
+			
+			employees = employeeService.getAllEmployees(messages.get(0));
+		}else {
+			String adminEmail = employeeService.findAdminEmail(messages.get(0));
+			employees = employeeService.getAllEmployees(adminEmail);
+		}
+		
+
+		model.addAttribute("employees", employees);
+		
 		return "admin/employees";
 	}
 	
@@ -90,7 +102,7 @@ public class AdminController {
 	{
 		System.out.println("Employee Created");
 
-		employeeService.saveEmployee(employee);
+	
 		
 		@SuppressWarnings("unchecked")
         List<String> messages = (List<String>) session.getAttribute("MY_SESSION_MESSAGES");
@@ -103,9 +115,20 @@ public class AdminController {
 		String role = adminService.findRole(messages.get(0));
 		
 		model.addAttribute("role", role);
+		
+		if(role.equals("admin")) {
+			
+			employee.setAdminEmail(messages.get(0));
+		}else {
+			String adminEmail = employeeService.findAdminEmail(messages.get(0));
+			employee.setAdminEmail(adminEmail);
+		}
+		
+		
+		employeeService.saveEmployee(employee);
 		if(role.equals("admin")) {
 		
-		return "redirect:/admin";
+		return "redirect:/employees";
 		}
 		else{
 			return "redirect:/employee";
@@ -155,7 +178,7 @@ public class AdminController {
 	public String updateEmployee(@ModelAttribute("employee") Employee employee, Model model, HttpSession session)
 	{
 		System.out.println("employee updated");
-		employeeService.updateEmployee(employee);
+		
 		@SuppressWarnings("unchecked")
         List<String> messages = (List<String>) session.getAttribute("MY_SESSION_MESSAGES");
 
@@ -166,10 +189,18 @@ public class AdminController {
         model.addAttribute("sessionMessages", messages);
 		String role = adminService.findRole(messages.get(0));
 		
+		if(role.equals("admin")) {
+			
+			employee.setAdminEmail(messages.get(0));
+		}else {
+			String adminEmail = employeeService.findAdminEmail(messages.get(0));
+			employee.setAdminEmail(adminEmail);
+		}
+		employeeService.updateEmployee(employee);
 		model.addAttribute("role", role);
 		if(role.equals("admin")) {
 		
-		return "redirect:/admin";
+			return "redirect:/employees";
 		}
 		else{
 			return "redirect:/employee";
@@ -193,7 +224,7 @@ public class AdminController {
 		model.addAttribute("role", role);
 		if(role.equals("admin")) {
 		
-		return "redirect:/admin";
+			return "redirect:/employees";
 		}
 		else{
 			return "redirect:/employee";
@@ -203,8 +234,7 @@ public class AdminController {
 	@PostMapping("/searchEmployee")
 	public String searchEmployee(Model model, HttpSession session, @RequestParam("search") String search ) {
 		
-        List<Employee> employees = employeeService.searchEmployee(search);
-        model.addAttribute("employees", employees);
+        
         Employee employee = new Employee();
         model.addAttribute("employee", employee);
         @SuppressWarnings("unchecked")
@@ -216,6 +246,17 @@ public class AdminController {
 		}
         model.addAttribute("sessionMessages", messages);
 		String role = adminService.findRole(messages.get(0));
+		String adminEmail = "";
+		if(role.equals("admin")) {
+			
+			adminEmail = messages.get(0);
+		}else {
+			adminEmail = employeeService.findAdminEmail(messages.get(0));
+			
+		}
+		
+		List<Employee> employees = employeeService.searchEmployee(search, adminEmail);
+        model.addAttribute("employees", employees);
 		
 		model.addAttribute("role", role);
 		return "admin/employees";
@@ -224,8 +265,7 @@ public class AdminController {
 	@GetMapping("/customers")
 	public String customers(Model model,  HttpSession session) {
 
-		List<Customer> customers = customerService.getAllCustomers();
-		model.addAttribute("customers", customers);
+		
 		Customer customer = new Customer();
 		model.addAttribute("customer", customer);
 		@SuppressWarnings("unchecked")
@@ -239,6 +279,18 @@ public class AdminController {
 		String role = adminService.findRole(messages.get(0));
 		
 		model.addAttribute("role", role);
+		List<Customer> customers = null;
+		
+		if(role.equals("admin")) {
+			customers = customerService.getAllCustomers(messages.get(0));
+		}
+		else {
+			String adminEmail = employeeService.findAdminEmail(messages.get(0));
+			
+			customers = customerService.getAllCustomers(adminEmail);
+		}
+		model.addAttribute("customers", customers);
+		
 		System.out.println("Rolee--->"+role);
 		return "admin/customers";
 	}
@@ -248,7 +300,7 @@ public class AdminController {
 	{
 		System.out.println("Customer Created");
 		customer.setRole("customer");
-		customerService.saveCustomer(customer);
+		
 		@SuppressWarnings("unchecked")
         List<String> messages = (List<String>) session.getAttribute("MY_SESSION_MESSAGES");
 
@@ -259,10 +311,19 @@ public class AdminController {
         model.addAttribute("sessionMessages", messages);
 		String role = adminService.findRole(messages.get(0));
 		
+
+		if(role.equals("admin")) {
+			
+			customer.setAdminEmail(messages.get(0));
+		}else {
+			String adminEmail = employeeService.findAdminEmail(messages.get(0));
+			customer.setAdminEmail(adminEmail);
+		}
+		customerService.saveCustomer(customer);
 		model.addAttribute("role", role);
 		if(role.equals("admin")) {
 		
-		return "redirect:/admin";
+			return "redirect:/customers";
 		}
 		else{
 			return "redirect:/employee";
@@ -289,7 +350,7 @@ public class AdminController {
 		model.addAttribute("role", role);
 		if(role.equals("admin")) {
 		
-		return "redirect:/admin";
+			return "redirect:/customers";
 		}
 		else{
 			return "redirect:/employee";
@@ -299,8 +360,7 @@ public class AdminController {
 	@PostMapping("/searchCustomer")
 	public String searchCustomer(Model model, HttpSession session, @RequestParam("search") String search ) {
 		
-        List<Customer> customers = customerService.searchCustomer(search);
-        model.addAttribute("customers", customers);
+   
         Customer customer = new Customer();
         model.addAttribute("customer", customer);
         @SuppressWarnings("unchecked")
@@ -312,7 +372,16 @@ public class AdminController {
 		}
         model.addAttribute("sessionMessages", messages);
 		String role = adminService.findRole(messages.get(0));
-		
+		String adminEmail = "";
+		if(role.equals("admin")) {
+			
+			adminEmail = messages.get(0);
+		}else {
+			adminEmail = employeeService.findAdminEmail(messages.get(0));
+			
+		}
+	     List<Customer> customers = customerService.searchCustomer(search, adminEmail);
+	        model.addAttribute("customers", customers);
 		model.addAttribute("role", role);
 		return "admin/customers";
 	}
@@ -324,9 +393,7 @@ public class AdminController {
 		model.addAttribute("shifts", shifts);
 		Shift shift = new Shift();
 		model.addAttribute("shift", shift);
-	List<Employee> employees = employeeService.getAllEmployees();
-		
-		model.addAttribute("employees", employees);
+
 		@SuppressWarnings("unchecked")
         List<String> messages = (List<String>) session.getAttribute("MY_SESSION_MESSAGES");
 
@@ -336,7 +403,16 @@ public class AdminController {
 		}
         model.addAttribute("sessionMessages", messages);
 		String role = adminService.findRole(messages.get(0));
+		List<Employee> employees = null;
 		
+		if(role.equals("admin")) {
+			
+			employees = employeeService.getAllEmployees(messages.get(0));
+		}else {
+			String adminEmail = employeeService.findAdminEmail(messages.get(0));
+			employees = employeeService.getAllEmployees(adminEmail);
+		}
+		model.addAttribute("employees", employees);
 		model.addAttribute("role", role);
 		return "admin/shifts";
 	}
@@ -347,7 +423,7 @@ public class AdminController {
 	{
 		System.out.println("Shift Created");
 
-		adminService.saveShift(shift);
+	
 		
 		@SuppressWarnings("unchecked")
         List<String> messages = (List<String>) session.getAttribute("MY_SESSION_MESSAGES");
@@ -359,10 +435,20 @@ public class AdminController {
         model.addAttribute("sessionMessages", messages);
 		String role = adminService.findRole(messages.get(0));
 		
+		if(role.equals("admin")) {
+			
+			shift.setAdminEmail(messages.get(0));
+		}else {
+			String adminEmail = employeeService.findAdminEmail(messages.get(0));
+			shift.setAdminEmail(adminEmail);
+		}
+		
+		adminService.saveShift(shift);
+		
 		model.addAttribute("role", role);
 		if(role.equals("admin")) {
 		
-		return "redirect:/admin";
+			return "redirect:/shifts";
 		}
 		else{
 			return "redirect:/employee";
@@ -381,14 +467,21 @@ public class AdminController {
 		}
 		Shift shift = adminService.getShiftById(id);
 		model.addAttribute("shift", shift);	
-		List<Employee> employees = employeeService.getAllEmployees();
-		
-		model.addAttribute("employees", employees);
+	
 		System.out.println(shift);
 		
         model.addAttribute("sessionMessages", messages);
 		String role = adminService.findRole(messages.get(0));
+		List<Employee> employees = null;
 		
+		if(role.equals("admin")) {
+			
+			employees = employeeService.getAllEmployees(messages.get(0));
+		}else {
+			String adminEmail = employeeService.findAdminEmail(messages.get(0));
+			employees = employeeService.getAllEmployees(adminEmail);
+		}
+		model.addAttribute("employees", employees);
 		model.addAttribute("role", role);
 		
 		return "admin/updateshift";
@@ -399,7 +492,7 @@ public class AdminController {
 	{
 		System.out.println("employee updated");
 		
-		adminService.updateShift(shift);
+		
 		@SuppressWarnings("unchecked")
         List<String> messages = (List<String>) session.getAttribute("MY_SESSION_MESSAGES");
 
@@ -410,10 +503,18 @@ public class AdminController {
         model.addAttribute("sessionMessages", messages);
 		String role = adminService.findRole(messages.get(0));
 		
+		if(role.equals("admin")) {
+			
+			shift.setAdminEmail(messages.get(0));
+		}else {
+			String adminEmail = employeeService.findAdminEmail(messages.get(0));
+			shift.setAdminEmail(adminEmail);
+		}
+		adminService.updateShift(shift);
 		model.addAttribute("role", role);
 		if(role.equals("admin")) {
 		
-		return "redirect:/admin";
+			return "redirect:/shifts";
 		}
 		else{
 			return "redirect:/employee";
@@ -437,7 +538,7 @@ public class AdminController {
 		model.addAttribute("role", role);
 		if(role.equals("admin")) {
 		
-		return "redirect:/admin";
+			return "redirect:/shifts";
 		}
 		else{
 			return "redirect:/employee";
@@ -447,9 +548,9 @@ public class AdminController {
 	@GetMapping("/inventory")
 	public String inventory(Model model, HttpSession session) {
 
-		List<Inventory> inventories = adminService.getAllInventories();
+		
 	
-		model.addAttribute("inventories", inventories);
+		
 		Inventory inventory = new Inventory();
 		model.addAttribute("inventory", inventory);
 		@SuppressWarnings("unchecked")
@@ -462,6 +563,17 @@ public class AdminController {
         model.addAttribute("sessionMessages", messages);
 		String role = adminService.findRole(messages.get(0));
 		
+		List<Inventory> inventories = null;
+		
+		if(role.equals("admin")) {
+			
+			inventories = adminService.getAllInventories(messages.get(0));
+		}else {
+			String adminEmail = employeeService.findAdminEmail(messages.get(0));
+			inventories = adminService.getAllInventories(adminEmail);
+		}
+		model.addAttribute("inventories", inventories);
+		
 		model.addAttribute("role", role);
 		
 		return "admin/inventories";
@@ -472,7 +584,7 @@ public class AdminController {
 	{
 		System.out.println("Inventory Created");
 
-		adminService.saveInventory(inventory);
+		
 		
 		@SuppressWarnings("unchecked")
         List<String> messages = (List<String>) session.getAttribute("MY_SESSION_MESSAGES");
@@ -484,10 +596,19 @@ public class AdminController {
         model.addAttribute("sessionMessages", messages);
 		String role = adminService.findRole(messages.get(0));
 		
+		if(role.equals("admin")) {
+			
+			inventory.setAdminEmail(messages.get(0));
+		}else {
+			String adminEmail = employeeService.findAdminEmail(messages.get(0));
+			inventory.setAdminEmail(adminEmail);
+		}
+		adminService.saveInventory(inventory);
+		
 		model.addAttribute("role", role);
 		if(role.equals("admin")) {
 		
-		return "redirect:/admin";
+			return "redirect:/inventory";
 		}
 		else{
 			return "redirect:/employee";
@@ -512,6 +633,8 @@ public class AdminController {
         model.addAttribute("sessionMessages", messages);
 		String role = adminService.findRole(messages.get(0));
 		
+		
+		
 		model.addAttribute("role", role);
 		
 		return "admin/updateinventory";
@@ -522,7 +645,40 @@ public class AdminController {
 	{
 		System.out.println("employee updated");
 		
+		
+		@SuppressWarnings("unchecked")
+        List<String> messages = (List<String>) session.getAttribute("MY_SESSION_MESSAGES");
+
+		if(messages == null) {
+			model.addAttribute("errormsg", "Session Expired. Please Login Again");
+			return "home/error";
+		}
+        model.addAttribute("sessionMessages", messages);
+		String role = adminService.findRole(messages.get(0));
+		
+		if(role.equals("admin")) {
+			
+			inventory.setAdminEmail(messages.get(0));
+		}else {
+			String adminEmail = employeeService.findAdminEmail(messages.get(0));
+			inventory.setAdminEmail(adminEmail);
+		}
 		adminService.updateInventory(inventory);
+		
+		model.addAttribute("role", role);
+		if(role.equals("admin")) {
+		
+			return "redirect:/inventory";
+		}
+		else{
+			return "redirect:/employee";
+		}
+	}
+	
+	@PostMapping("/deleteInventory/{id}")
+	public String deleteInventory(@PathVariable(name="id") Long id,  HttpSession session, Model model)
+	{
+		adminService.deleteInventory(id);
 		@SuppressWarnings("unchecked")
         List<String> messages = (List<String>) session.getAttribute("MY_SESSION_MESSAGES");
 
@@ -536,7 +692,7 @@ public class AdminController {
 		model.addAttribute("role", role);
 		if(role.equals("admin")) {
 		
-		return "redirect:/admin";
+			return "redirect:/inventory";
 		}
 		else{
 			return "redirect:/employee";
@@ -546,7 +702,27 @@ public class AdminController {
 	@GetMapping("/makebilling")
 	public String makebilling(Model model, HttpSession session) {
 
-		List<Inventory> inventories = adminService.getAllInventories();
+			List<Inventory> inventories = null;
+			
+			@SuppressWarnings("unchecked")
+			List<String> messages = (List<String>) session.getAttribute("MY_SESSION_MESSAGES");
+			
+			if(messages == null) {
+				model.addAttribute("errormsg", "Session Expired. Please Login Again");
+				return "home/error";
+			}
+			model.addAttribute("sessionMessages", messages);
+			String role = adminService.findRole(messages.get(0));
+			
+			model.addAttribute("role", role);
+		
+		if(role.equals("admin")) {
+			
+			inventories = adminService.getAllInventories(messages.get(0));
+		}else {
+			String adminEmail = employeeService.findAdminEmail(messages.get(0));
+			inventories = adminService.getAllInventories(adminEmail);
+		}
 	
 
 		List<String> catList= new ArrayList<String>();
@@ -589,17 +765,7 @@ public class AdminController {
 		model.addAttribute("categories", catList);
 		model.addAttribute("itemMap", itemMap);
 		
-		@SuppressWarnings("unchecked")
-        List<String> messages = (List<String>) session.getAttribute("MY_SESSION_MESSAGES");
-
-		if(messages == null) {
-			model.addAttribute("errormsg", "Session Expired. Please Login Again");
-			return "home/error";
-		}
-        model.addAttribute("sessionMessages", messages);
-		String role = adminService.findRole(messages.get(0));
 		
-		model.addAttribute("role", role);
 	
 		
 		return "admin/makebilling";
@@ -609,7 +775,27 @@ public class AdminController {
 	 public String updateInv( @RequestParam(value = "quantity[]") List<Integer> quantity, @RequestParam(value = "items[]") List<String> items,
 			 @RequestParam(value = "customerMail") String customerMail,  @RequestParam(value = "cost") int cost, Model model, HttpSession session) {	
 
-			List<Inventory> inventories = adminService.getAllInventories();
+		 List<Inventory> inventories = null;
+			
+			@SuppressWarnings("unchecked")
+			List<String> messages = (List<String>) session.getAttribute("MY_SESSION_MESSAGES");
+			
+			if(messages == null) {
+				model.addAttribute("errormsg", "Session Expired. Please Login Again");
+				return "home/error";
+			}
+			model.addAttribute("sessionMessages", messages);
+			String role = adminService.findRole(messages.get(0));
+			
+			model.addAttribute("role", role);
+		
+		if(role.equals("admin")) {
+			
+			inventories = adminService.getAllInventories(messages.get(0));
+		}else {
+			String adminEmail = employeeService.findAdminEmail(messages.get(0));
+			inventories = adminService.getAllInventories(adminEmail);
+		}
 		
 		 for(int i=0;i<quantity.size();i++)
 		 {
@@ -626,12 +812,25 @@ public class AdminController {
 			 }
 			
 		 }
+		 String adminEmail = "";
+			if(role.equals("admin")) {
+				
+				adminEmail = messages.get(0);
+			}else {
+				adminEmail = employeeService.findAdminEmail(messages.get(0));
+				
+			}
 		 
 		 Bill bill = new Bill();
 		 
 		 bill.setCustomerMail(customerMail);
 		 bill.setNoOfItems(String.valueOf(items.size()));
 		 bill.setTotalCost(String.valueOf(cost));
+		 bill.setAdminEmail(adminEmail);
+		 Date date = new Date();
+		 SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy");
+	       String str = formatter.format(date);
+		 bill.setTimestamp(str);
 		 
 		 Reward reward = new Reward();
 		 
@@ -640,6 +839,22 @@ public class AdminController {
 		 
 		 adminService.saveBill(bill);
 		 adminService.saveReward(reward);
+			
+			
+			model.addAttribute("role", role);
+			if(role.equals("admin")) {
+			
+				return "redirect:/makebilling";
+			}
+			else{
+				return "redirect:/employee";
+			}
+		}
+	 
+	 @GetMapping("/showbills")
+		public String showbills(Model model, HttpSession session) {
+
+			
 			@SuppressWarnings("unchecked")
 	        List<String> messages = (List<String>) session.getAttribute("MY_SESSION_MESSAGES");
 
@@ -650,14 +865,56 @@ public class AdminController {
 	        model.addAttribute("sessionMessages", messages);
 			String role = adminService.findRole(messages.get(0));
 			
-			model.addAttribute("role", role);
-			if(role.equals("admin")) {
+			List<Bill> bills = null;
 			
-			return "redirect:/admin";
+			
+			if(role.equals("admin")) {
+				
+				bills = adminService.getAllTodayBills(messages.get(0));
+			}else {
+				String adminEmail = employeeService.findAdminEmail(messages.get(0));
+				bills = adminService.getAllTodayBills(adminEmail);
 			}
-			else{
-				return "redirect:/employee";
+			model.addAttribute("bills", bills);
+			
+			model.addAttribute("role", role);
+			
+			return "admin/showbills";
+		}
+	 
+	 @GetMapping("/batchClose")
+		public String batchClose(Model model, HttpSession session) {
+
+			
+			@SuppressWarnings("unchecked")
+	        List<String> messages = (List<String>) session.getAttribute("MY_SESSION_MESSAGES");
+
+			if(messages == null) {
+				model.addAttribute("errormsg", "Session Expired. Please Login Again");
+				return "home/error";
 			}
+	        model.addAttribute("sessionMessages", messages);
+			String role = adminService.findRole(messages.get(0));
+			
+			
+			
+			List<Bill> bills = null;
+			
+			
+			if(role.equals("admin")) {
+				adminService.removeTodayBills(messages.get(0));
+				
+				bills = adminService.getAllTodayBills(messages.get(0));
+			}else {
+				String adminEmail = employeeService.findAdminEmail(messages.get(0));
+				adminService.removeTodayBills(adminEmail);
+				bills = adminService.getAllTodayBills(adminEmail);
+			}
+			model.addAttribute("bills", bills);
+			
+			model.addAttribute("role", role);
+			
+			return "admin/showbills";
 		}
 
 	

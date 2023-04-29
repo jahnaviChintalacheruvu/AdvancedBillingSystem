@@ -27,6 +27,7 @@ public class Employee {
 	private String age;
 	private String gender;
 	private String role;
+	private String adminEmail;
 	private String mobileNumber;
 	private String doorNo;
 	private String street;

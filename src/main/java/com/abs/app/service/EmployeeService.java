@@ -7,7 +7,7 @@ import com.abs.app.model.Shift;
 
 public interface EmployeeService {
 
-	List<Employee> getAllEmployees();
+	List<Employee> getAllEmployees(String email);
 
 	Employee getEmployeeById(Long id);
 
@@ -15,13 +15,15 @@ public interface EmployeeService {
 
 	void deleteEmployee(Long id);
 
-	List<Employee> searchEmployee(String search);
+	List<Employee> searchEmployee(String search, String email);
 
 	void saveEmployee(Employee employee);
 
 	Employee authenticateEmployee(Employee emp);
 
 	Employee findEmployee(String email);
+
+	String findAdminEmail(String empEmail);
 
 
 }

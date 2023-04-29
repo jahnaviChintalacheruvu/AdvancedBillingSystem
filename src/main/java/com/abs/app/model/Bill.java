@@ -24,4 +24,6 @@ public class Bill {
 	private String customerMail;
 	private String totalCost;
 	private String noOfItems;
+	private String timestamp;
+	private String adminEmail;
 }

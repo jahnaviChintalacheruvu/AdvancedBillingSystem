@@ -246,6 +246,11 @@
           <a class="nav-link" style="color:green" aria-current="page" href="/employee">Home</a>
         </li>
         </th:block>
+          <th:block th:if="${role} =='manager'">
+       <li class="nav-item">
+          <a class="nav-link" style="color:green" aria-current="page" href="/employee">Home</a>
+        </li>
+        </th:block>
         
       </ul>
       <form class="d-flex" role="search"> 

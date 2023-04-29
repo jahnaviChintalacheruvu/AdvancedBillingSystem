@@ -17,9 +17,9 @@ public class EmployeeServiceImpl implements EmployeeService{
 	EmployeeRepo employeeRepo;
 
 	@Override
-	public List<Employee> getAllEmployees() {
+	public List<Employee> getAllEmployees(String email) {
 		
-		return employeeRepo.findAll();
+		return employeeRepo.findAll().stream().filter(emp -> emp.getAdminEmail().equals(email)).collect(Collectors.toList());
 	}
 
 	@Override
@@ -49,9 +49,9 @@ public class EmployeeServiceImpl implements EmployeeService{
 	}
 
 	@Override
-	public List<Employee> searchEmployee(String search) {
+	public List<Employee> searchEmployee(String search, String email) {
 		// TODO Auto-generated method stub
-		List<Employee> empList = employeeRepo.findAll();
+		List<Employee> empList = employeeRepo.findAll().stream().filter(emp -> emp.getAdminEmail().equals(email)).collect(Collectors.toList());
 		
 		
 		
@@ -77,6 +77,13 @@ public class EmployeeServiceImpl implements EmployeeService{
 		public Employee findEmployee(String email) {
 			
 			return employeeRepo.findbyEmail(email);
+		}
+
+		@Override
+		public String findAdminEmail(String empEmail) {
+			// TODO Auto-generated method stub
+			return employeeRepo.findAll().stream().filter(emp -> emp.getEmail().equals(empEmail)).map(e -> e.getAdminEmail()).toString();
+		
 		}
 	
 	

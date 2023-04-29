@@ -63,7 +63,10 @@ public class EmployeeController {
         model.addAttribute("sessionMessages", messages);
 		String role = adminService.findRole(messages.get(0));
 		
+		List<Shift> shiftTime = adminService.findShiftTime(messages.get(0));
+		System.out.println(shiftTime+"----");
 		model.addAttribute("role", role);
+		model.addAttribute("shiftTime", shiftTime.get(0));
 
 		return "employee/welcomeemployee";
 	}

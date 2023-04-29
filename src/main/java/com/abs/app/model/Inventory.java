@@ -22,6 +22,7 @@ public class Inventory {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long Id;
 	private String name;
+	private String adminEmail;
 	private String category;
 	private String quantity;
 	private String price;

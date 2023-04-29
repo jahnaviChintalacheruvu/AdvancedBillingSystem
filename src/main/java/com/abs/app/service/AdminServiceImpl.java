@@ -3,7 +3,9 @@ import static java.util.Comparator.comparingLong;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toCollection;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -172,9 +174,9 @@ public class AdminServiceImpl implements AdminService{
 	}
 
 	@Override
-	public List<Inventory> getAllInventories() {
+	public List<Inventory> getAllInventories(String email) {
 		// TODO Auto-generated method stub
-		return inventoryRepo.findAll();
+		return inventoryRepo.findAll().stream().filter(inv -> inv.getAdminEmail().equals(email) && Integer.parseInt(inv.getQuantity()) > 0).collect(Collectors.toList());
 	}
 
 	@Override
@@ -226,6 +228,40 @@ public class AdminServiceImpl implements AdminService{
 			return "customer";
 		}
 		
+	}
+
+	@Override
+	public void deleteInventory(Long id) {
+		// TODO Auto-generated method stub
+		inventoryRepo.delete(inventoryRepo.findInventoryById(id));
+		
+	}
+
+	@Override
+	public List<Bill> getAllTodayBills(String adminEmail) {
+		// TODO Auto-generated method stub
+		Date date = new Date();
+		 SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy");
+	       String str = formatter.format(date);
+		return billRepo.findAll().stream().filter(b -> b.getAdminEmail().equals(adminEmail) && b.getTimestamp().equals(str)).collect(Collectors.toList());
+	}
+
+	@Override
+	public void removeTodayBills(String email) {
+		// TODO Auto-generated method stub
+		Date date = new Date();
+		 SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy");
+	       String str = formatter.format(date);
+		billRepo.deleteTodayBills(email,str);
+		
+	}
+
+	@SuppressWarnings("unlikely-arg-type")
+	@Override
+	public List<Shift> findShiftTime(String email) {
+		// TODO Auto-generated method stub
+		Employee emp = employeeRepo.findbyEmail(email);
+		return shiftRepo.findAll().stream().filter(sh ->sh.getEmpId().equals(emp.getId().toString())).collect(Collectors.toList());
 	}
 
 }

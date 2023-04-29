@@ -22,6 +22,7 @@ public class Shift {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long Id;
 	private String empId;
+	private String adminEmail;
 	private String startTime;
 	private String endTime;
 	private String fromDate;

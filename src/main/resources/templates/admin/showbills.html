@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
+
 <head>
   <title>Dashboard</title>
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
- 	
    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+ 	<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+ 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
  <style>
  
      body {
@@ -228,7 +229,7 @@
  
  </head>
 <body>
- <nav class="navbar navbar-expand-lg" style="background-color: #00FFFF;">
+  <nav class="navbar navbar-expand-lg" style="background-color: #00FFFF;">
   <div class="container-fluid">
     <a class="navbar-brand" href="/" style="color: black"><b>Advanced Billing System</b></a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -236,7 +237,7 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <th:block th:if="${role} =='admin'">
+       <th:block th:if="${role} =='admin'">
        <li class="nav-item">
           <a class="nav-link" style="color:green" aria-current="page" href="/admin">Home</a>
         </li>
@@ -258,227 +259,77 @@
     </div>
   </div>
 </nav><br>
-	 
-	 
 <div class="container">
-
-    <h2 align="center">Bill Generation</h2>
-    
-    	<div class="row">
-    	
-    
-        <div class="col-md-3">
-      <div class="form-group">
-    <label for="category">Select Category</label>
-    <select class="form-control" id="category" name="category" onChange="changecat(this.value);" required>
-		     <option th:value="null">Select Category</option>
-		    <option th:value="toothpaste">Toothpaste</option>
-		    <option th:value="brush">Brush</option>
-		    <option th:value="soap">Soap</option>
-		    <option th:value="shampoo">Shampoo</option>
-		    <option th:value="handwash">HandWash</option>
-		    <option th:value="oil">Oil</option>
-		    <option th:value="vegetables">Vegetables</option>
-		    <option th:value="biscuits">Biscuits</option>
-		    <option th:value="chocolates">Chocolates</option>
-		    <option th:value="chips">Chips</option>
-		    <option th:value="pickels">Pickels</option>
-		    <option th:value="cooldrinks">CoolDrinks</option>
-		    <option th:value="waterbottles">Water Bottles</option>
-		    </select>
-  </div>
-  </div> 
-   
-        <div class="col-md-3">
-      <div class="form-group">
-    <label for="itemName">Select ItemName</label>
-    <select class="form-control" id="itemName" name="itemName" onChange="changeitem(this.value);" required>
-    	<option value="" disabled selected>Select</option>
-   
-    </select>
-  </div>
-  </div> 
-  
-
-     
-     
-       <div class="col-md-3">
-        <div class="form-group">
-          <label for="Quantity">Quantity</label>
-          <input type="number" class="form-control" placeholder="" id="Quantity" name="quanity" required>
+  <div class="table-wrapper">
+    <div class="table-title">
+      <div class="row">
+        <div class="col-sm-3">
+          <h2>Daily <b>Report</b></h2>
+        </div>
+        <div class="col-sm-3">
+		   
+		  </div>
+		  
+        <div class="col-sm-6">
+          
+          <th:block th:if="${role} =='admin'">
+          <a href="/batchClose" class="btn btn-success">Batch Close</a>
+          <button class="btn btn-success" onclick="generateDailyReport()">Generate Daily Report</button>
+          </th:block>
+          
+           <th:block th:if="${role} =='manager'">
+           <a href="/batchClose" class="btn btn-success">Batch Close</a>
+          <button class="btn btn-success" onclick="generateDailyReport()">Generate Daily Report</button>
+          </th:block>
+          
+           <th:block th:if="${role} =='employee'">
+           <a href="/batchClose" class="btn btn-success">Batch Close</a>
+          <button class="btn btn-success" onclick="generateDailyReport()">Generate Daily Report</button>
+          </th:block>
         </div>
       </div>
-     
-   
-     	</div>
-<br>
-  
-
-
-    <button type="button" class="btn btn-dark" onClick="addcart()">Add</button>
-    <br>
-     <div id="cart" style="float: left;margin-top:30px;">
-     
-
-    
-
- 
-</div>
-	
-	
-	<script th:inline="javascript">
-	
-	var cat = /*[[${itemMap}]]*/ 'default';
-	console.log(cat);
-	 function changecat(value) {
-	        if (value.length == 0) document.getElementById("itemName").innerHTML = "<option></option>";
-	        else {
-	            var itemOptions = "";
-	            for (categoryId in cat[value]) {
-	                itemOptions += "<option value="+cat[value][categoryId]+">" + cat[value][categoryId].split(",")[0] + "</option>";
-	            }
-	            document.getElementById("itemName").innerHTML = itemOptions;
-	        }
-	    }
-	 
-	 
-	 
-	 var item=new Array();
-	 var bill= new Array();
-	 
-		var quant = new Array();
-		
-		var cost;
-
-	 function addcart()
-	 {
-	         //alert(itemname[x] +"is added of Cost "+itemcost[x]);
-	         
-	         
-	         
-	         var itemName = document.getElementById("itemName").value;
-	         if(itemName === ''){
-	        	 alert('Please fill all details');
-	        	 return;
-	         }
-	         console.log(itemName);
-	          var quantity = document.getElementById("Quantity").value;
-	          if(quantity === ''){
-		        	 alert('Please fill all details');
-		        	 return;
-		         }
-	          var it = itemName.split(",");
-	         item.push(it[0]);
-	         quant.push(quantity);
-	        
-	         bill.push(quantity * parseInt(it[1]));
-	         
-	         var items="<h1>Your Bill</h1><table class='table table-striped table-hover'><tr><th>Item Name</th><th>Item Cost</th><th>Remove Item</th></tr>";
-	      cost=0;
-	         for(var i=0;i<item.length;i++)
-	         {
-	                 items+="<tr><td>"+item[i]+"</td><td>"+bill[i]+"</td><td><button class='btn btn-danger' type='button' onclick='del("+(i)+")'>Remove</button></td></tr>";
-	                 cost=cost+bill[i];
-	         }
-	         
-	         items+="<tr><td>Total cost is </td><td rowspan='2'>"+cost+"</td><td><button class='btn btn-success' onclick='UpdateInventory()'>Checkout</button></td></tr>";
-	        
-	         items+="</table>";
-	         
-	         document.getElementById('cart').innerHTML=items;
-
-	         
-
-
-	      
-	 }
-	 
-	 
-	 function del(i){
-		 
-		 console.log(i);
-		 
-		item.splice(i,i+1);
-		bill.splice(i,i+1);
-		quant.splice(i,i+1);
-		 
-		 console.log(item);
-		 
-		   var items="<h1>Your Bill</h1><table border='1'><tr><th>Item Name</th><th>Item Cost</th><th>Remove Item</th></tr>";
-		      cost=0;
-		         for(var i=0;i<item.length;i++)
-		         {
-		                 items+="<tr><td>"+item[i]+"</td><td>"+bill[i]+"</td><td><button class='btn btn-success' type='button' onclick='del("+(i)+")'>Remove</button></td></tr>";
-		                 cost=cost+bill[i];
-		         }
-		         items+="<tr><td>Total cost is </td><td rowspan='2'>"+cost+"</td><td><button onclick='UpdateInventory()'>Checkout</button></td></tr>";
-		
-		         items+="</table>";
-		         
-		         document.getElementById('cart').innerHTML=items;
-	 }
-	 
-	 function generatePDF() {
-		    const email = document.getElementById('customerMail').value;
-		    const totalcost = document.getElementById('totalCost').value;
-		    const nofitems = document.getElementById('noOfItems').value;
-
-		    const bill = "<h1>Email Id: "+email+"<br> Total Cost: "+totalcost+"<br>  Number of Items: "+nofitems+"</h1>";
-		    console.log(bill);
-		    html2pdf()
-		        .from(bill)
-		        .save();
-
-		}
-
-		 
-	  async function UpdateInventory(){
-
-		
-		 var quantities = quant;
-		 var items = item;
-		  var totalcost = cost;
-		  
-		
-
-		    var customerMail = prompt('Please enter Customer Mail Id');
-		  
-	     $.post("/updateInv",{
-		        "quantity" : quantities,
-		        "items" : items,
-		        "customerMail": customerMail,
-		        "cost" : totalcost
-		    });
-	     
-	 
-              alert('Billing Done successfully')
-	    	 const receipt = document.getElementById('cart');
-			  html2pdf()
-		        .from(receipt)
-		        .save();
+    </div>
+    <table class="table table-striped table-hover" id="todayreport">
+      <thead>
+        <tr>
+                   
+          <th>Email</th>
+          <th>Total Cost</th>
+          <th>Number of Items</th>
+          <th>Timestamp</th>
+         
+        </tr>
+      </thead>
+      <tbody>
+      <th:block th:each="bill : ${bills}">
+        <tr> 
+          <td th:text="${bill.customerMail}"></td>
+          <td th:text="${bill.totalCost}"></td>
+          <td th:text="${bill.noOfItems}"></td>
+            <td th:text="${bill.timestamp}"></td>
           
-         	await sleep(5000);
-        	// window.location.replace('/makebilling');
-       
-	     
-	     
-	       
-		   
-		
-		 
-		}
-		
-	 
-	 
-	  
-	
-	</script>
-	
-	
-	
+        </tr>
+        </th:block>
+      </tbody>
+      
+    </table>
+  
+</div>
 
 
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+<script type="text/javascript">
+function generateDailyReport() {
+    const bills = document.getElementById('todayreport');
+    
+    html2pdf()
+        .from(bills)
+        .save();
+
+}
+
+</script>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>

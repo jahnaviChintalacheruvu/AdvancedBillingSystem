@@ -27,9 +27,9 @@ public class CustomerServiceImpl implements CustomerService{
 	private RewardRepo rewardRepo;
 
 	@Override
-	public List<Customer> searchCustomer(String search) {
+	public List<Customer> searchCustomer(String search, String email) {
 		
-		List<Customer> customerList = customerRepo.findAll();
+		List<Customer> customerList = customerRepo.findAll().stream().filter(c -> c.getAdminEmail().equals(email)).collect(Collectors.toList());
 		return customerList.stream().filter(customer -> customer.getName().contains(search)).collect(Collectors.toList());
 	}
 
@@ -49,9 +49,9 @@ public class CustomerServiceImpl implements CustomerService{
 	}
 
 	@Override
-	public List<Customer> getAllCustomers() {
+	public List<Customer> getAllCustomers(String email) {
 		// TODO Auto-generated method stub
-		return customerRepo.findAll();
+		return customerRepo.findAll().stream().filter(c -> c.getAdminEmail().equals(email)).collect(Collectors.toList());
 	}
 
 public Customer authenticateCustomer(Customer customer) {
@@ -97,5 +97,8 @@ public List<Bill> searchBill(String search) {
 	
 	return billList.stream().filter(emp -> emp.getTotalCost().equals(search) || emp.getNoOfItems().equals(search)).collect(Collectors.toList());
 }
+
+
+
 
 }
