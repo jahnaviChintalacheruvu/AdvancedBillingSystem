@@ -35,7 +35,12 @@
   </div>
 </nav><br>
 <div class="container">
+<th:block th:if="${flag} ==1">
    Shift Start Time: <p th:text="${shiftTime.startTime}"></p> Shift End Time : <p th:text="${shiftTime.endTime}"></p>
+ </th:block>
+ <th:block th:if="${flag} ==0">
+   <p th:text="${shiftTime}"></p>
+ </th:block>
   <br>
   
   <div class="row">
@@ -89,6 +94,16 @@
 		    <a href="/makebilling" class="btn btn-primary">Click Here</a>
 		  </div>
   	  </div>
+  	  
+  	   <div class="card" style="width: 18rem;margin-right:20px;margin-top:20px;">
+		  <img class="card-img-top" src="images/billing.png" alt="Card image">
+		  <div class="card-body">
+		    <h4 class="card-title">Generate Daily Report</h4>
+		    <p class="card-text">Today's Report</p>
+		    <a href="/showbills" class="btn btn-primary">Click Here</a>
+		  </div>
+  	  </div>
+  	  
   	  
   </div>
 </div>

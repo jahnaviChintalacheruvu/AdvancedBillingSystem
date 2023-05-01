@@ -88,6 +88,7 @@ public class AdminController {
 			employees = employeeService.getAllEmployees(messages.get(0));
 		}else {
 			String adminEmail = employeeService.findAdminEmail(messages.get(0));
+			
 			employees = employeeService.getAllEmployees(adminEmail);
 		}
 		
@@ -121,6 +122,7 @@ public class AdminController {
 			employee.setAdminEmail(messages.get(0));
 		}else {
 			String adminEmail = employeeService.findAdminEmail(messages.get(0));
+			System.out.println("--++---"+adminEmail);
 			employee.setAdminEmail(adminEmail);
 		}
 		

@@ -54,7 +54,7 @@ public class CustomerServiceImpl implements CustomerService{
 		return customerRepo.findAll().stream().filter(c -> c.getAdminEmail().equals(email)).collect(Collectors.toList());
 	}
 
-public Customer authenticateCustomer(Customer customer) {
+	public Customer authenticateCustomer(Customer customer) {
 		
 		
 		
@@ -70,33 +70,33 @@ public Customer authenticateCustomer(Customer customer) {
 			
 	}
 
-@Override
-public Customer findCustomer(String email) {
-	// TODO Auto-generated method stub
-	return customerRepo.findbyEmail(email);
-}
-
-@Override
-public List<Bill> getAllBills(String email) {
-	// TODO Auto-generated method stub
-	return billRepo.findAll().stream().filter(bill -> bill.getCustomerMail().equals(email)).collect(Collectors.toList());
-}
-
-@Override
-public List<Reward> getAllRewads(String email) {
-	// TODO Auto-generated method stub
-	return rewardRepo.findAll().stream().filter(re-> re.getCustomerMail().equals(email)).collect(Collectors.toList());
-}
-
-@Override
-public List<Bill> searchBill(String search) {
-	// TODO Auto-generated method stub
-	List<Bill> billList = billRepo.findAll();
+	@Override
+	public Customer findCustomer(String email) {
+		// TODO Auto-generated method stub
+		return customerRepo.findbyEmail(email);
+	}
 	
+	@Override
+	public List<Bill> getAllBills(String email) {
+		// TODO Auto-generated method stub
+		return billRepo.findAll().stream().filter(bill -> bill.getCustomerMail().equals(email)).collect(Collectors.toList());
+	}
 	
+	@Override
+	public List<Reward> getAllRewads(String email) {
+		// TODO Auto-generated method stub
+		return rewardRepo.findAll().stream().filter(re-> re.getCustomerMail().equals(email)).collect(Collectors.toList());
+	}
 	
-	return billList.stream().filter(emp -> emp.getTotalCost().equals(search) || emp.getNoOfItems().equals(search)).collect(Collectors.toList());
-}
+	@Override
+	public List<Bill> searchBill(String search) {
+		// TODO Auto-generated method stub
+		List<Bill> billList = billRepo.findAll();
+		
+		
+		
+		return billList.stream().filter(emp -> emp.getTotalCost().equals(search) || emp.getNoOfItems().equals(search)).collect(Collectors.toList());
+	}
 
 
 

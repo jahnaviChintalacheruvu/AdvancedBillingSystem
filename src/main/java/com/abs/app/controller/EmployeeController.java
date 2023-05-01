@@ -66,7 +66,14 @@ public class EmployeeController {
 		List<Shift> shiftTime = adminService.findShiftTime(messages.get(0));
 		System.out.println(shiftTime+"----");
 		model.addAttribute("role", role);
+		if(shiftTime.size() > 0) {
 		model.addAttribute("shiftTime", shiftTime.get(0));
+		model.addAttribute("flag", 1);
+		}
+		else {
+			model.addAttribute("shiftTime","No Shift Timings Alloted ");
+			model.addAttribute("flag", 0);
+		}
 
 		return "employee/welcomeemployee";
 	}

@@ -82,8 +82,12 @@ public class EmployeeServiceImpl implements EmployeeService{
 		@Override
 		public String findAdminEmail(String empEmail) {
 			// TODO Auto-generated method stub
-			return employeeRepo.findAll().stream().filter(emp -> emp.getEmail().equals(empEmail)).map(e -> e.getAdminEmail()).toString();
-		
+			String adminEmail = "";
+			List<Employee> emps = employeeRepo.findAll().stream().filter(emp -> emp.getEmail().equals(empEmail)).collect(Collectors.toList());
+			for(int i=0;i< emps.size();i++) {
+				adminEmail = emps.get(i).getAdminEmail();
+			}
+			return adminEmail;
 		}
 	
 	
